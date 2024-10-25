@@ -263,6 +263,8 @@ public class TerceraVentana extends javax.swing.JFrame {
                 // Obtener la lista de descripciones de los ejercicios asociados al usuario
                 ArrayList<String> descripciones = da.getIntentosByUserId((int) id);
                 System.out.println("Exercicis per revisar " + descripciones.size());
+                System.out.println("el commit ha anat be");
+
 
                 // Convertir la ArrayList a un array de String
                 String[] descripcionesArray = descripciones.toArray(new String[0]);
