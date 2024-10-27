@@ -9,24 +9,23 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  *
- * @author aleja
+ * @author Raül Lama
  */
 // DAO Data access object
 public class DataAccess {
     private Connection getConnection() {
         Connection connection = null;
-        // acer otro metodo para modificar
-        // Cadena de conexión corregida
         String connectionString = "jdbc:sqlserver://localhost;database=simulapdb;trustServerCertificate=true;user=sa;password=1234;";
-        //String connectionString2 = "jdbc:sqlserver://localhost;database=simulapdb;user=user;password=1234;";
         
         //despues de hacer focus que se haga el update
         try {
@@ -59,21 +58,17 @@ public class DataAccess {
         } catch (SQLException ex) {
             Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        return usuaris;
-        
+        return usuaris; 
     }
     
-    // intents 
+    // intents amb timestamp_fi no null i sense valoració
 public ArrayList<String> getIntentosByUserId(int idUsuario) {
     ArrayList<String> descripciones = new ArrayList<>(); // Lista para almacenar las descripciones de los ejercicios
     String sql = "SELECT e.Descripcio " +
              "FROM Intents i " +
              "JOIN Exercicis e ON i.IdExercici = e.Id " +
-             "LEFT JOIN Review r ON i.Id = r.IdIntent " +
-             "WHERE i.IdUsuari = ? AND r.Valoracio IS NULL";
- // Consulta para obtener las descripciones de ejercicios por ID de usuario
-
+             "JOIN Review r ON i.Id = r.IdIntent " +
+             "WHERE i.IdUsuari = ? AND r.Valoracio IS NULL AND i.Timestamp_Fi IS NOT NULL";
     Connection connection = getConnection(); // Obtener la conexión a la base de datos
     try {
         PreparedStatement selectStatement = connection.prepareStatement(sql); // Preparar la consulta
@@ -94,12 +89,8 @@ public ArrayList<String> getIntentosByUserId(int idUsuario) {
         }
     }
 
-    return descripciones; // Retornar la lista de descripciones de ejercicios
+    return descripciones;
 }
-
- 
-
-
 
 
     public boolean updateUsuaris(Usuari user) {
@@ -112,7 +103,7 @@ public ArrayList<String> getIntentosByUserId(int idUsuario) {
         // Asignar valores a los parámetros del PreparedStatement
         updateStatement.setString(1, user.getNom());
         updateStatement.setString(2, user.getEmail());
-        updateStatement.setString(3, user.getPasswordHash()); // Suponiendo que tienes un método getPassword en Usuari
+        updateStatement.setString(3, user.getPasswordHash());
         updateStatement.setBytes(4, user.getFoto());
         updateStatement.setBoolean(5, user.isInstructor()); // Usar el nuevo método isInstructor
         updateStatement.setInt(6, user.getId());
@@ -159,9 +150,36 @@ public ArrayList<String> getIntentosByUserId(int idUsuario) {
     }
     
     
+    
     // Retornar el objeto Usuari si se encontró, o null si no
     return user;
 }
+    
+    public String getNombreById(int id) {
+    String nombreUsuario = null; // Inicializa la variable para el nombre de usuario
+    String sql = "SELECT Nom FROM usuaris WHERE Id = ?"; // Consulta para obtener el nombre por ID
+
+    try (Connection connection = getConnection();
+         PreparedStatement selectStatement = connection.prepareStatement(sql)) {
+        
+        // Establece el parámetro en la consulta
+        selectStatement.setInt(1, id);
+        
+        // Ejecuta la consulta
+        ResultSet resultSet = selectStatement.executeQuery();
+        
+        // Si existe un resultado, obten el nombre de usuario
+        if (resultSet.next()) {
+            nombreUsuario = resultSet.getString("Nom");
+        }
+        
+    } catch (SQLException ex) {
+        Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return nombreUsuario; // Devuelve el nombre del usuario o null si no existe
+}
+
     
     public int registerUser(Usuari u) {
         Connection connection = getConnection();
@@ -207,6 +225,79 @@ public ArrayList<String> getIntentosByUserId(int idUsuario) {
     
     return lastId; // Retorna el último ID encontrado
 }
+public int getLastIdExercicis() {
+    int lastId = 0; // Inicializa el ID a 0 (o a otro valor que consideres adecuado)
+
+    // Define la consulta SQL para obtener el máximo ID
+    String sql = "SELECT MAX(id) AS maxId FROM Exercicis"; // Ajusta el nombre del campo si es necesario
+
+    // Manejo de la conexión y los recursos
+    try (Connection connection = getConnection();
+         PreparedStatement preparedStatement = connection.prepareStatement(sql);
+         ResultSet resultSet = preparedStatement.executeQuery()) {
+
+        // Verifica si hay un resultado
+        if (resultSet.next()) {
+            lastId = resultSet.getInt("maxId"); // Obtiene el máximo ID
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(Usuari.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return lastId; // Retorna el último ID encontrado
+}
+// Afegir exercici i intent per poder asignar un exercici a un usuari
+public int crearExerciciEnBD(int usuarioId, String nombreExercici, String descripcionExercici) {
+    String sql = "INSERT INTO Exercicis (NomExercici, Descripcio) VALUES (?, ?)"; 
+    String sqlInsertIntent = "INSERT INTO Intents (idUsuari, IdExercici, Timestamp_Inici, Timestamp_Fi, Videofile) VALUES (?, ?, ?, ?, ?)";
+    String sqlInsertReview = "INSERT INTO Review (IdIntent, IdReviewer, Valoracio, Comentari) VALUES (?, ?, ?, ?)";
+
+    try (Connection connection = getConnection();
+         PreparedStatement insertStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+        // Insertar el ejercicio
+        insertStatement.setString(1, nombreExercici); 
+        insertStatement.setString(2, descripcionExercici); 
+        int rowsAffected = insertStatement.executeUpdate();
+
+        if (rowsAffected > 0) {
+            // Obtener el ID del nuevo ejercicio
+            ResultSet generatedKeys = insertStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int idExercici = generatedKeys.getInt(1); // Retorna el ID del nuevo ejercicio
+
+                // Crear el intento
+                try (PreparedStatement insertIntentStatement = connection.prepareStatement(sqlInsertIntent, Statement.RETURN_GENERATED_KEYS)) {
+                    insertIntentStatement.setInt(1, usuarioId);
+                    insertIntentStatement.setInt(2, idExercici);
+                    insertIntentStatement.setTimestamp(3, new Timestamp(System.currentTimeMillis())); // Timestamp de inicio
+                    insertIntentStatement.setTimestamp(4, null); // Timestamp de fin, se puede actualizar después
+                    insertIntentStatement.setString(5, null); // Videofile, se puede definir después
+
+                    insertIntentStatement.executeUpdate();
+                    ResultSet intentKeys = insertIntentStatement.getGeneratedKeys();
+                    if (intentKeys.next()) {
+                        int idIntent = intentKeys.getInt(1); // Obtener el ID del nuevo intento
+
+                        // Crear la reseña con valoración nula
+                        try (PreparedStatement insertReviewStatement = connection.prepareStatement(sqlInsertReview)) {
+                            insertReviewStatement.setInt(1, idIntent);
+                            insertReviewStatement.setInt(2, usuarioId); // Usar el mismo ID del usuario como revisor
+                            insertReviewStatement.setNull(3, Types.INTEGER); // Valoración nula
+                            insertReviewStatement.setString(4, "Aún no he realizado el ejercicio, por lo que no puedo proporcionar una valoración.");
+                            insertReviewStatement.executeUpdate();
+                        }
+                    }
+                }
+                return idExercici; // Retorna el ID del nuevo ejercicio
+            }
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return -1; // Retorna -1 si hubo un error
+}
+
 
     
 }

@@ -200,10 +200,12 @@ public class TerceraVentana extends javax.swing.JFrame {
         // Abrir el JFrame "CrearExercici"
         CrearExercici crearExerciciFrame = new CrearExercici(); // Asume que CrearExercici es el nombre de tu JFrame
         crearExerciciFrame.setVisible(true);
+        //TerceraVentana.setVisible(false);
         
         // Puedes pasar información al nuevo JFrame si es necesario
-        // Por ejemplo, suponiendo que CrearExercici tiene un método para recibir el usuario
-        crearExerciciFrame.setUsuario(usuarioSeleccionado);
+        // Convierte el String a int
+        int idUsuari = Integer.parseInt(usuarioSeleccionado);
+        crearExerciciFrame.setUsuario(idUsuari);
         
     } else {
         // Mostrar un mensaje de error si no se ha seleccionado un usuario
