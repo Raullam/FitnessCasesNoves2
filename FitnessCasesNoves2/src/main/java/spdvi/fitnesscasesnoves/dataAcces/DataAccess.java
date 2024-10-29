@@ -14,6 +14,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,6 +36,30 @@ public class DataAccess {
         }
         return connection;
     }
+    
+        //boton mostrar todo TerceraVentana
+     public List<String> getIntentsSinReview() throws SQLException {
+        List<String> resultList = new ArrayList<>();
+        
+        String query = "SELECT Intents.Id AS IdIntent, Exercicis.NomExercici " +
+                       "FROM Intents " +
+                       "JOIN Exercicis ON Intents.IdExercici = Exercicis.Id " +
+                       "LEFT JOIN Review ON Intents.Id = Review.IdIntent " +
+                       "WHERE Review.Id IS NULL";
+
+        try (PreparedStatement stmt = getConnection().prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int idIntent = rs.getInt("IdIntent");
+                String nomExercici = rs.getString("NomExercici");
+                resultList.add("ID: " + idIntent + " " + nomExercici);
+            }
+        }
+        
+        return resultList;
+    }
+    
     
     public ArrayList<Usuari> getUsuaris() {
         ArrayList<Usuari> usuaris = new ArrayList<>(); // mos cream s'objecte
@@ -61,6 +86,35 @@ public class DataAccess {
         return usuaris; 
     }
     
+    
+    public ArrayList<String> getIntentsSinReviewPerId(int idUsuario) {
+        ArrayList<String> intentosSinReview = new ArrayList<>(); // Lista para almacenar resultados
+        
+        String sql = "SELECT Intents.Id AS IdIntent, Exercicis.NomExercici " +
+                     "FROM Intents " +
+                     "JOIN Exercicis ON Intents.IdExercici = Exercicis.Id " +
+                     "LEFT JOIN Review ON Intents.Id = Review.IdIntent " +
+                     "WHERE Review.Id IS NULL AND Intents.IdUsuari = ?";
+        
+        try (PreparedStatement selectStatement = getConnection().prepareStatement(sql)) {
+            // Establecer el valor del parámetro idUsuario
+            selectStatement.setInt(1, idUsuario);
+            
+            // Ejecutar la consulta
+            ResultSet resultSet = selectStatement.executeQuery();
+            
+            // Iterar sobre los resultados y agregar a la lista
+            while (resultSet.next()) {
+                int idIntent = resultSet.getInt("IdIntent");
+                String nomExercici = resultSet.getString("NomExercici");
+                intentosSinReview.add("ID: " + idIntent + " " + nomExercici);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return intentosSinReview;
+    }
     // intents amb timestamp_fi no null i sense valoració
 public ArrayList<String> getIntentosByUserId(int idUsuario) {
     ArrayList<String> descripciones = new ArrayList<>(); // Lista para almacenar las descripciones de los ejercicios
@@ -91,6 +145,34 @@ public ArrayList<String> getIntentosByUserId(int idUsuario) {
 
     return descripciones;
 }
+public ArrayList<String> getIntentosSinRevision() {
+    ArrayList<String> descripciones = new ArrayList<>(); // Lista para almacenar las descripciones de los ejercicios
+    String sql = "SELECT e.Descripcio " +
+                 "FROM Intents i " +
+                 "JOIN Exercicis e ON i.IdExercici = e.Id " +
+                 "JOIN Review r ON i.Id = r.IdIntent " +
+                 "WHERE r.Valoracio IS NULL AND i.Timestamp_Fi IS NOT NULL";
+    Connection connection = getConnection(); // Obtener la conexión a la base de datos
+    try {
+        PreparedStatement selectStatement = connection.prepareStatement(sql); // Preparar la consulta
+        ResultSet resultSet = selectStatement.executeQuery(); // Ejecutar la consulta
+
+        // Iterar sobre los resultados y agregar las descripciones de los ejercicios a la lista
+        while (resultSet.next()) {
+            descripciones.add(resultSet.getString("Descripcio")); // Obtener la descripción del ejercicio
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
+    } finally {
+        try {
+            if (connection != null) connection.close(); // Cerrar la conexión después de usarla
+        } catch (SQLException e) {
+            Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+    return descripciones;
+}
+
 
 
     public boolean updateUsuaris(Usuari user) {
@@ -297,6 +379,36 @@ public int crearExerciciEnBD(int usuarioId, String nombreExercici, String descri
     }
     return -1; // Retorna -1 si hubo un error
 }
+
+public void eliminarUsuario(int usuarioId) {
+    // Eliminar primero las reseñas asociadas
+    String eliminarReviews = "DELETE FROM Review WHERE id = ?"; // Ajusta según tu esquema
+    String eliminarIntentos = "DELETE FROM Intents WHERE IdUsuari = ?"; // Ajusta según tu esquema
+    String eliminarUsuario = "DELETE FROM Usuaris WHERE id = ?"; // Comando para eliminar el usuario
+
+    try (Connection conn = getConnection()) {
+        // Eliminar reseñas
+        try (PreparedStatement pstmt = conn.prepareStatement(eliminarReviews)) {
+            pstmt.setInt(1, usuarioId);
+            pstmt.executeUpdate();
+        }
+
+        // Eliminar intentos
+        try (PreparedStatement pstmt = conn.prepareStatement(eliminarIntentos)) {
+            pstmt.setInt(1, usuarioId);
+            pstmt.executeUpdate();
+        }
+
+        // Finalmente, eliminar el usuario
+        try (PreparedStatement pstmt = conn.prepareStatement(eliminarUsuario)) {
+            pstmt.setInt(1, usuarioId);
+            pstmt.executeUpdate();
+        }
+    } catch (SQLException e) {
+        e.printStackTrace(); // Manejo de excepciones
+    }
+}
+
 
 
     

@@ -2,7 +2,6 @@ package spdvi.fitnesscasesnoves.gui;
 
 import javax.swing.JOptionPane;
 import spdvi.fitnesscasesnoves.dataAcces.DataAccess;
-import spdvi.fitnesscasesnoves.dto.Usuari;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
