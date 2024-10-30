@@ -4,6 +4,7 @@
  */
 package spdvi.fitnesscasesnoves.gui;
 
+import java.awt.event.MouseEvent;
 import spdvi.fitnesscasesnoves.dto.Usuari;
 import spdvi.fitnesscasesnoves.dataAcces.DataAccess;
 import java.sql.Connection;
@@ -12,12 +13,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
+import spdvi.fitnesscasesnoves.dto.Intents;
 
 /**
  *
@@ -66,6 +70,9 @@ public final class TerceraVentana extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
+        jButton9 = new javax.swing.JButton();
         jMenuBar2 = new javax.swing.JMenuBar();
         jMenu3 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
@@ -115,6 +122,11 @@ public final class TerceraVentana extends javax.swing.JFrame {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
+        });
+        jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jList1MouseClicked(evt);
+            }
         });
         jScrollPane1.setViewportView(jList1);
 
@@ -201,6 +213,27 @@ public final class TerceraVentana extends javax.swing.JFrame {
             }
         });
 
+        jButton7.setText("Veure tots els intents");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
+        jButton8.setText("Veure totes les reviews");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+
+        jButton9.setText("Crear Usuari");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+
         jMenu3.setText("Usuaris");
         jMenuBar2.add(jMenu3);
 
@@ -232,14 +265,21 @@ public final class TerceraVentana extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(79, 79, 79)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton4)
-                            .addComponent(jButton3))
+                            .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap())))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(57, 57, 57)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -251,7 +291,13 @@ public final class TerceraVentana extends javax.swing.JFrame {
                 .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton4)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton8)
+                .addGap(90, 90, 90))
         );
 
         pack();
@@ -301,9 +347,12 @@ public final class TerceraVentana extends javax.swing.JFrame {
         if (selectedRow != -1) { // Si una fila está seleccionada
             // Obtener el valor del usuario seleccionado (por ejemplo, de la primera columna)
             String usuarioSeleccionado = jTable1.getValueAt(selectedRow, 0).toString();
+            
+            
 
             // Abrir el JFrame "CrearExercici"
             CrearExercici crearExerciciFrame = new CrearExercici(); // Asume que CrearExercici es el nombre de tu JFrame
+            crearExerciciFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Para cerrar solo esta ventana
             crearExerciciFrame.setVisible(true);
             //TerceraVentana.setVisible(false);
 
@@ -347,6 +396,50 @@ public final class TerceraVentana extends javax.swing.JFrame {
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         intentosSinReview();
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        IntentsFrame aa= new IntentsFrame();
+        aa.setVisible(true);
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
+if (evt.getClickCount() == 2) { // Verificar si se ha hecho un doble clic
+        int index = jList1.getSelectedIndex(); // Obtener el índice del elemento seleccionado
+        if (index != -1) {
+            String intent = jList1.getModel().getElementAt(index); // Obtener el intento seleccionado
+
+            // Extraer ID y ejercicio desde el String intent
+            int id = Integer.parseInt(intent.substring(4, 9).trim());
+            String exercici = intent.substring(10).trim();
+
+            // Crear y mostrar la ventana DetallIntent
+            DetallIntent detallIntent = new DetallIntent(intent, id, exercici); // Crear la instancia de DetallIntent
+
+            // Deshabilitar la ventana principal
+            this.setEnabled(false);
+
+            // Añadir un WindowListener para volver a habilitar la ventana principal al cerrar DetallIntent
+            detallIntent.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent e) {
+                    setEnabled(true); // Rehabilitar la ventana principal
+                    toFront(); // Asegura que la ventana principal esté al frente
+                }
+            });
+
+            detallIntent.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Para cerrar solo esta ventana
+            detallIntent.setLocationRelativeTo(this); // Centrar la ventana
+            detallIntent.setVisible(true); // Mostrar la ventana
+        }
+    }    }//GEN-LAST:event_jList1MouseClicked
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton9ActionPerformed
 
     // Metodo para cargar lista de intentos sin review para usarlo en el boton i al iniciar el jFrame
     public void intentosSinReview(){
@@ -428,17 +521,21 @@ public final class TerceraVentana extends javax.swing.JFrame {
                     // Obtener el ID del usuario seleccionado (columna 0)
                     Object id = jTable1.getValueAt(selectedRow, 0);
                     System.out.println("Id del usuri selecionat: " + id);
+                    
+                    
 
+                   
                     // Obtener la lista de descripciones de los ejercicios asociados al usuario
-                    ArrayList<String> descripciones = da.getIntentsSinReviewPerId((int) id);
-                    System.out.println("Exercicis per revisar " + descripciones.size());
+                    ArrayList<String> intentsSinReview = da.getIntentsSinReviewPerId((int) id);
+                    System.out.println("Exercicis per revisar " + intentsSinReview.size());
 
                     // Convertir la ArrayList a un array de String
-                    String[] descripcionesArray = descripciones.toArray(new String[0]);
+                    //String[] descripcionesArray = descripciones.toArray(new String[0]);
 
                     // Actualizar la JList con las descripciones
                     jTextField1.setText("Id del usuari selecionat: " + id.toString());
-                    jList1.setListData(descripcionesArray); // Esto actualizará la jList1 con las descripciones de los ejercicios
+                    jList1.setListData(intentsSinReview.toArray(new String[0]));
+                    
                 }
             }
         }
@@ -456,7 +553,13 @@ public final class TerceraVentana extends javax.swing.JFrame {
 
         // Actualizar la JList con las descripciones de intentos sin revisión
         jList1.setListData(descripcionesArray);
+        
     }
+    
+   
+    
+
+       
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -466,6 +569,9 @@ public final class TerceraVentana extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JList<String> jList1;

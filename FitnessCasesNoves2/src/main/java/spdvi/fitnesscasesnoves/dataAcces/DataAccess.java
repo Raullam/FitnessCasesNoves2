@@ -53,7 +53,21 @@ public class DataAccess {
             while (rs.next()) {
                 int idIntent = rs.getInt("IdIntent");
                 String nomExercici = rs.getString("NomExercici");
-                resultList.add("ID: " + idIntent + " " + nomExercici);
+                if(idIntent <= 9 ){
+                resultList.add("ID: " + idIntent + "         " + nomExercici);
+                }
+                if(idIntent > 9){
+                resultList.add("ID: " + idIntent + "       " + nomExercici);
+                }
+                if(idIntent > 99){
+                resultList.add("ID: " + idIntent + "      " + nomExercici);
+                }
+                if(idIntent > 999){
+                resultList.add("ID: " + idIntent + "      " + nomExercici);
+                }
+                if(idIntent > 9999){
+                resultList.add("ID: " + idIntent + "     " + nomExercici);
+                }
             }
         }
         
@@ -107,7 +121,21 @@ public class DataAccess {
             while (resultSet.next()) {
                 int idIntent = resultSet.getInt("IdIntent");
                 String nomExercici = resultSet.getString("NomExercici");
-                intentosSinReview.add("ID: " + idIntent + " " + nomExercici);
+                if(idIntent <= 9 ){
+                intentosSinReview.add("ID: " + idIntent + "         " + nomExercici);
+                }
+                if(idIntent > 9){
+                intentosSinReview.add("ID: " + idIntent + "       " + nomExercici);
+                }
+                if(idIntent > 99){
+                intentosSinReview.add("ID: " + idIntent + "      " + nomExercici);
+                }
+                if(idIntent > 999){
+                intentosSinReview.add("ID: " + idIntent + "      " + nomExercici);
+                }
+                if(idIntent > 9999){
+                intentosSinReview.add("ID: " + idIntent + "     " + nomExercici);
+                }
             }
         } catch (SQLException ex) {
             Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
@@ -332,7 +360,7 @@ public int getLastIdExercicis() {
 public int crearExerciciEnBD(int usuarioId, String nombreExercici, String descripcionExercici) {
     String sql = "INSERT INTO Exercicis (NomExercici, Descripcio) VALUES (?, ?)"; 
     String sqlInsertIntent = "INSERT INTO Intents (idUsuari, IdExercici, Timestamp_Inici, Timestamp_Fi, Videofile) VALUES (?, ?, ?, ?, ?)";
-    String sqlInsertReview = "INSERT INTO Review (IdIntent, IdReviewer, Valoracio, Comentari) VALUES (?, ?, ?, ?)";
+    //String sqlInsertReview = "INSERT INTO Review (IdIntent, IdReviewer, Valoracio, Comentari) VALUES (?, ?, ?, ?)";
 
     try (Connection connection = getConnection();
          PreparedStatement insertStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -362,13 +390,13 @@ public int crearExerciciEnBD(int usuarioId, String nombreExercici, String descri
                         int idIntent = intentKeys.getInt(1); // Obtener el ID del nuevo intento
 
                         // Crear la reseña con valoración nula
-                        try (PreparedStatement insertReviewStatement = connection.prepareStatement(sqlInsertReview)) {
+                       /* try (PreparedStatement insertReviewStatement = connection.prepareStatement(sqlInsertReview)) {
                             insertReviewStatement.setInt(1, idIntent);
                             insertReviewStatement.setInt(2, usuarioId); // Usar el mismo ID del usuario como revisor
                             insertReviewStatement.setNull(3, Types.INTEGER); // Valoración nula
                             insertReviewStatement.setString(4, "Aún no he realizado el ejercicio, por lo que no puedo proporcionar una valoración.");
                             insertReviewStatement.executeUpdate();
-                        }
+                        }*/
                     }
                 }
                 return idExercici; // Retorna el ID del nuevo ejercicio
