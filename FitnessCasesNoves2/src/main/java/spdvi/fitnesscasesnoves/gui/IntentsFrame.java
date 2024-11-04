@@ -1,5 +1,14 @@
 package spdvi.fitnesscasesnoves.gui;
 
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import spdvi.fitnesscasesnoves.dataAcces.DataAccess;
+import spdvi.fitnesscasesnoves.dto.Intents;
+import spdvi.fitnesscasesnoves.dto.Usuari;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -17,6 +26,9 @@ public class IntentsFrame extends javax.swing.JFrame {
     public IntentsFrame() {
         initComponents();
         this.setLocationRelativeTo(null);
+        insertarIntentsAlJtext();
+
+        
 
     }
 
@@ -35,6 +47,7 @@ public class IntentsFrame extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -52,6 +65,11 @@ public class IntentsFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         jButton1.setText("Borrar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Afegir");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -63,6 +81,11 @@ public class IntentsFrame extends javax.swing.JFrame {
         jButton3.setText("Editar");
 
         jButton4.setText("Torna enrera");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -70,31 +93,35 @@ public class IntentsFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(22, 22, 22)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 118, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 413, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(124, 124, 124)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))
-                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 22, Short.MAX_VALUE))
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 66, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton4))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(22, Short.MAX_VALUE))
+                        .addGap(171, 171, 171)
+                        .addComponent(jButton4)))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         pack();
@@ -104,6 +131,96 @@ public class IntentsFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+
+        TerceraVentana tca = new TerceraVentana();
+        tca.setVisible(rootPaneCheckingEnabled);
+        this.setVisible(false);
+                
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+// Verificar si se ha seleccionado una fila en jTable1
+    int selectedRow = jTable1.getSelectedRow();
+
+    if (selectedRow != -1) { // Si una fila está seleccionada
+        // Obtener el ID del intent seleccionado (ajusta según tu modelo de datos)
+        String intentId = jTable1.getValueAt(selectedRow, 0).toString(); // ID del intent
+
+        // Crear el mensaje del modal
+        String mensaje = "¿Estás seguro de querer eliminar el intent con ID " + intentId + "?";
+        
+        // Mostrar el modal de confirmación
+        int respuesta = JOptionPane.showConfirmDialog(this, mensaje, "Confirmar eliminación", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+        // Verificar la respuesta del usuario
+        if (respuesta == JOptionPane.YES_OPTION) {
+            // Lógica para eliminar el intent de la base de datos
+            DataAccess da = new DataAccess();
+            da.eliminarIntent(Integer.parseInt(intentId)); // Método que debes implementar para eliminar el intent
+
+            // Actualizar la tabla después de eliminar
+            insertarIntentsAlJtext(); // Vuelve a cargar la tabla sin el intent eliminado
+            JOptionPane.showMessageDialog(this, "Intent eliminado con éxito."); // Mensaje de éxito
+        }
+        // Si el usuario selecciona NO, simplemente no hacemos nada
+    } else {
+        JOptionPane.showMessageDialog(this, "Por favor, selecciona un intent para eliminar."); // Mensaje si no hay selección
+    }    }//GEN-LAST:event_jButton1ActionPerformed
+    
+    public final void insertarIntentsAlJtext() {
+    DataAccess da = new DataAccess();
+ArrayList<Intents> intents = da.getIntents(); // Obtener la lista de intents desde la base de datos
+
+DefaultTableModel model = (DefaultTableModel) jTable1.getModel(); // Obtener el modelo de la tabla
+model.setRowCount(0); // Limpiar las filas anteriores del JTable
+
+// Limpiar columnas anteriores si ya estaban creadas
+model.setColumnCount(0);
+
+// Añadir las columnas que deseas
+model.addColumn("ID Intent");
+model.addColumn("ID Usuari");
+model.addColumn("ID Exercici");
+model.addColumn("Timestamp Inici");
+model.addColumn("Timestamp Fi");
+model.addColumn("Video File");
+
+// Iterar sobre cada intent y agregarlo al JTable
+for (Intents intent : intents) {
+    // Crear un arreglo de objetos para cada fila (intent)
+    Object[] row = {
+        intent.getId(),
+        intent.getIdUsuari(),
+        intent.getIdExercici(),
+        intent.getTimestamp_Inici(),
+        intent.getTimestamp_Fi(),
+        intent.getVideofile()
+    };
+    model.addRow(row); // Agregar la fila al modelo de la tabla
+}
+
+// Añadir ListSelectionListener para detectar la fila seleccionada
+jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+    @Override
+    public void valueChanged(ListSelectionEvent event) {
+        if (!event.getValueIsAdjusting()) {
+            int selectedRow = jTable1.getSelectedRow();
+            if (selectedRow != -1) {
+                // Obtener el ID del intent seleccionado (columna 0)
+                Object id = jTable1.getValueAt(selectedRow, 0);
+                System.out.println("Id del intent seleccionado: " + id);
+
+                // Mostrar el ID del intent seleccionado en el JTextField
+                jLabel1.setText("Id del intent seleccionado: " + id.toString());
+
+                // Puedes realizar otras acciones con el ID del intent seleccionado si es necesario
+            }
+        }
+    }
+});
+
+}
     /**
      * @param args the command line arguments
      */
@@ -145,6 +262,7 @@ public class IntentsFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables

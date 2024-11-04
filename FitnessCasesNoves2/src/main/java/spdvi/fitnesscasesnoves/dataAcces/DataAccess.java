@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import spdvi.fitnesscasesnoves.dto.Intents;
 
 /**
  *
@@ -99,6 +100,35 @@ public class DataAccess {
         }
         return usuaris; 
     }
+    
+    public ArrayList<Intents> getIntents() {
+    ArrayList<Intents> intents = new ArrayList<>();
+    String query = "SELECT * from Intents";
+
+    try (Connection connection = getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
+        ResultSet rs = stmt.executeQuery();){
+        
+
+        while (rs.next()) {
+            Intents intent = new Intents(
+                rs.getInt("Id"),
+                rs.getInt("IdUsuari"),
+                rs.getInt("IdExercici"),
+                rs.getString("Timestamp_Inici"),
+                rs.getString("Timestamp_Fi"),
+                rs.getString("Videofile")
+            );
+            intents.add(intent);
+        }
+        rs.close();
+        stmt.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return intents;
+}
+
     
     
     public ArrayList<String> getIntentsSinReviewPerId(int idUsuario) {
@@ -436,6 +466,27 @@ public void eliminarUsuario(int usuarioId) {
         e.printStackTrace(); // Manejo de excepciones
     }
 }
+// Método para eliminar un intent por su ID
+    public void eliminarIntent(int intentId) {
+        String query = "DELETE FROM Intents WHERE id = ?"; // Ajusta el nombre de la tabla y la columna según tu BD
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, intentId); // Asigna el ID del intent al parámetro de la consulta
+
+            int rowsAffected = stmt.executeUpdate(); // Ejecuta la consulta
+            if (rowsAffected > 0) {
+                System.out.println("Intent eliminado correctamente.");
+            } else {
+                System.out.println("No se encontró ningún intent con el ID proporcionado.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al eliminar el intent: " + e.getMessage());
+        }
+    }
+
+   
 
 
 
