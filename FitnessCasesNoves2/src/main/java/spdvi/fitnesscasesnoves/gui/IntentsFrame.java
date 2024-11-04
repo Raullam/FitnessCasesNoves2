@@ -1,9 +1,16 @@
 package spdvi.fitnesscasesnoves.gui;
 
+import java.awt.Color;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import spdvi.fitnesscasesnoves.dataAcces.DataAccess;
 import spdvi.fitnesscasesnoves.dto.Intents;
@@ -27,10 +34,7 @@ public class IntentsFrame extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         insertarIntentsAlJtext();
-
-        
-
-    }
+        }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -44,10 +48,10 @@ public class IntentsFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -62,6 +66,11 @@ public class IntentsFrame extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jTable1PropertyChange(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jButton1.setText("Borrar");
@@ -71,14 +80,12 @@ public class IntentsFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Afegir");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jButton3.setText("Editar");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jButton3ActionPerformed(evt);
             }
         });
-
-        jButton3.setText("Editar");
 
         jButton4.setText("Torna enrera");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -87,49 +94,52 @@ public class IntentsFrame extends javax.swing.JFrame {
             }
         });
 
+        jLabel2.setText("Intents");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 413, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(124, 124, 124)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 66, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(154, 154, 154)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(38, 38, 38)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
+                .addGap(13, 13, 13)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton3)
-                        .addGap(171, 171, 171)
-                        .addComponent(jButton4)))
-                .addGap(18, 18, 18)
+                        .addGap(210, 210, 210)
+                        .addComponent(jButton4))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
 
@@ -157,7 +167,12 @@ public class IntentsFrame extends javax.swing.JFrame {
         if (respuesta == JOptionPane.YES_OPTION) {
             // Lógica para eliminar el intent de la base de datos
             DataAccess da = new DataAccess();
-            da.eliminarIntent(Integer.parseInt(intentId)); // Método que debes implementar para eliminar el intent
+            try {
+                da.eliminarReviewsPorIntentId(Integer.parseInt(intentId));
+                da.eliminarIntent(Integer.parseInt(intentId)); 
+            } catch (SQLException ex) {
+                Logger.getLogger(IntentsFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             // Actualizar la tabla después de eliminar
             insertarIntentsAlJtext(); // Vuelve a cargar la tabla sin el intent eliminado
@@ -167,6 +182,51 @@ public class IntentsFrame extends javax.swing.JFrame {
     } else {
         JOptionPane.showMessageDialog(this, "Por favor, selecciona un intent para eliminar."); // Mensaje si no hay selección
     }    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    DataAccess da = new DataAccess();
+    
+    // Obtener la fila seleccionada
+    int selectedRow = jTable1.getSelectedRow();
+
+    // Verifica si una fila está seleccionada
+    if (selectedRow != -1) {
+        // Crear un objeto Intents con los datos de la fila seleccionada
+        Intents intent = new Intents(
+            Integer.parseInt(jTable1.getValueAt(selectedRow, 0).toString()), // id
+            Integer.parseInt(jTable1.getValueAt(selectedRow, 1).toString()), // idUsuari
+            Integer.parseInt(jTable1.getValueAt(selectedRow, 2).toString()), // idExercici
+            (jTable1.getValueAt(selectedRow, 3) != "" ? jTable1.getValueAt(selectedRow, 3).toString() : null), // timestampInici
+            (jTable1.getValueAt(selectedRow, 4) != "" ? jTable1.getValueAt(selectedRow, 4).toString() : null), // timestampFi
+            (jTable1.getValueAt(selectedRow, 5) != "" ? jTable1.getValueAt(selectedRow, 5).toString() : null)  // videoFile
+        );
+
+        // Mostrar modal de confirmación
+        int respuesta = JOptionPane.showConfirmDialog(this, "Estàs segur que vols modificar l'usuari amb id: " + intent.getId()+ "?", 
+                                                      "Confirmar modificació", JOptionPane.YES_NO_OPTION, 
+                                                      JOptionPane.QUESTION_MESSAGE);
+        if (respuesta == JOptionPane.YES_OPTION) {
+            // Guardar el objeto Intents en la base de datos
+            da.actualizarIntent(intent);
+
+            JOptionPane.showMessageDialog(this, "Canvis desats correctament a la base de dades.");
+        }
+        // Si el usuario selecciona "NO", no se realiza ninguna acción
+    } else {
+        JOptionPane.showMessageDialog(this, "Si us plau, selecciona una fila per editar.");
+    }
+    
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jTable1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTable1PropertyChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTable1PropertyChange
+    
+    
+    
+    
+    
+    
     
     public final void insertarIntentsAlJtext() {
     DataAccess da = new DataAccess();
@@ -199,6 +259,7 @@ for (Intents intent : intents) {
     };
     model.addRow(row); // Agregar la fila al modelo de la tabla
 }
+
 
 // Añadir ListSelectionListener para detectar la fila seleccionada
 jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -259,10 +320,10 @@ jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener()
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables

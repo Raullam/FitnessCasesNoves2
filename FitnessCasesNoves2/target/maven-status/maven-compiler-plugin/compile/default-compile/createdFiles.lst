@@ -1,8 +1,11 @@
+spdvi\fitnesscasesnoves\dto\Review.class
 spdvi\fitnesscasesnoves\gui\TerceraVentana$13.class
 spdvi\fitnesscasesnoves\gui\TerceraVentana$7.class
 spdvi\fitnesscasesnoves\gui\CrearExercici$1.class
+spdvi\fitnesscasesnoves\gui\ReviewsFrame$1.class
 spdvi\fitnesscasesnoves\gui\Register$1.class
 spdvi\fitnesscasesnoves\dto\Intents.class
+spdvi\fitnesscasesnoves\gui\ReviewsFrame.class
 spdvi\fitnesscasesnoves\gui\DetallIntent$2.class
 spdvi\fitnesscasesnoves\gui\TerceraVentana$3.class
 spdvi\fitnesscasesnoves\gui\App$4.class
@@ -12,7 +15,9 @@ spdvi\fitnesscasesnoves\gui\CrearExercici.class
 spdvi\fitnesscasesnoves\gui\Register$4.class
 spdvi\fitnesscasesnoves\gui\App$1.class
 spdvi\fitnesscasesnoves\gui\TerceraVentana$10.class
+spdvi\fitnesscasesnoves\dataAcces\LoginDataAccess.class
 spdvi\fitnesscasesnoves\gui\App.class
+spdvi\fitnesscasesnoves\gui\IntentsFrame$6.class
 spdvi\fitnesscasesnoves\dataAcces\DataAccess.class
 spdvi\fitnesscasesnoves\gui\LogIn$1.class
 spdvi\fitnesscasesnoves\gui\App$3.class
@@ -22,6 +27,7 @@ spdvi\fitnesscasesnoves\gui\TerceraVentana.class
 spdvi\fitnesscasesnoves\gui\CrearExercici$2.class
 spdvi\fitnesscasesnoves\gui\TerceraVentana$8.class
 spdvi\fitnesscasesnoves\gui\Register$3.class
+spdvi\fitnesscasesnoves\gui\ReviewsFrame$4.class
 spdvi\fitnesscasesnoves\gui\IntentsFrame$5.class
 spdvi\fitnesscasesnoves\gui\DetallIntent$1.class
 spdvi\fitnesscasesnoves\gui\IntentsFrame$2.class
@@ -38,6 +44,7 @@ spdvi\fitnesscasesnoves\gui\LogIn$5.class
 spdvi\fitnesscasesnoves\gui\Register$6.class
 spdvi\fitnesscasesnoves\gui\TerceraVentana$9.class
 spdvi\fitnesscasesnoves\gui\Register$2.class
+spdvi\fitnesscasesnoves\gui\ReviewsFrame$3.class
 spdvi\fitnesscasesnoves\gui\TerceraVentana$1.class
 spdvi\fitnesscasesnoves\gui\IntentsFrame$1.class
 spdvi\fitnesscasesnoves\gui\TerceraVentana$6.class
@@ -46,6 +53,7 @@ spdvi\fitnesscasesnoves\gui\TerceraVentana$14.class
 spdvi\fitnesscasesnoves\gui\Register$5.class
 spdvi\fitnesscasesnoves\gui\LogIn$6.class
 spdvi\fitnesscasesnoves\gui\TerceraVentana$4.class
+spdvi\fitnesscasesnoves\gui\ReviewsFrame$2.class
 spdvi\fitnesscasesnoves\gui\IntentsFrame.class
 spdvi\fitnesscasesnoves\gui\TerceraVentana$11.class
 spdvi\fitnesscasesnoves\gui\CrearExercici$3.class

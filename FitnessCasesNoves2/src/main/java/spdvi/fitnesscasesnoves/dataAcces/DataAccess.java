@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import spdvi.fitnesscasesnoves.dto.Intents;
+import spdvi.fitnesscasesnoves.dto.Review;
 
 /**
  *
@@ -25,7 +26,7 @@ import spdvi.fitnesscasesnoves.dto.Intents;
  */
 // DAO Data access object
 public class DataAccess {
-    private Connection getConnection() {
+    public Connection getConnection() {
         Connection connection = null;
         String connectionString = "jdbc:sqlserver://localhost;database=simulapdb;trustServerCertificate=true;user=sa;password=1234;";
         
@@ -259,41 +260,6 @@ public ArrayList<String> getIntentosSinRevision() {
 
     return updated; // Retornar el estado de la actualización
 }
-
-    public Usuari getUsuarioByUsername(String username) {
-    Usuari user = null; // Inicializa el objeto Usuari a null
-    String sql = "SELECT * FROM usuaris WHERE Nom = ?"; // Query para buscar el usuario por nombre
-
-    try (Connection connection = getConnection(); 
-         PreparedStatement selectStatement = connection.prepareStatement(sql)) {
-        
-        // Establecer el parámetro en la consulta
-        selectStatement.setString(1, username);
-        
-        // Ejecutar la consulta
-        ResultSet resultSet = selectStatement.executeQuery();
-        
-        // Si el usuario existe, obtener los datos y crear un objeto Usuari
-        if (resultSet.next()) {
-            user = new Usuari(
-                resultSet.getInt("Id"),
-                resultSet.getString("Nom"),
-                resultSet.getString("Email"),
-                resultSet.getString("PasswordHash"),
-                //resultSet.getBytes("Foto"),
-                resultSet.getBoolean("IsInstructor")
-            );
-        }
-        
-    } catch (SQLException ex) {
-        Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    
-    
-    
-    // Retornar el objeto Usuari si se encontró, o null si no
-    return user;
-}
     
     public String getNombreById(int id) {
     String nombreUsuario = null; // Inicializa la variable para el nombre de usuario
@@ -485,7 +451,62 @@ public void eliminarUsuario(int usuarioId) {
             System.out.println("Error al eliminar el intent: " + e.getMessage());
         }
     }
+    public void eliminarReviewsPorIntentId(int idIntent) throws SQLException {
+        String sql = "DELETE FROM Review WHERE IdIntent = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, idIntent);
+            pstmt.executeUpdate();
+        }
+    }
+    
+    // En la clase DataAccess
+public void actualizarIntent(Intents intent) {
+    // Ejemplo de código SQL para actualizar en la base de datos
+    String query = "UPDATE intents SET idUsuari = ?, idExercici = ?, timestamp_Inici = ?, " +
+                   "timestamp_Fi = ?, videoFile = ? WHERE id = ?";
 
+    try (Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, intent.getIdUsuari());
+        stmt.setInt(2, intent.getIdExercici());
+        stmt.setString(3, intent.getTimestamp_Inici());
+        stmt.setString(4, intent.getTimestamp_Fi());
+        stmt.setString(5, intent.getVideofile());
+        stmt.setInt(6, intent.getId());
+
+        stmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+// Método para obtener todas las reseñas desde la base de datos
+    public ArrayList<Review> getReviews() {
+        ArrayList<Review> reviews = new ArrayList<>();
+        String query = "SELECT [Id], [IdIntent], [IdReviewer], [Valoracio], [Comentari] FROM [simulapdb].[dbo].[Review]";
+
+        try (Connection conn = getConnection();
+            Statement statement = conn.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
+            while (resultSet.next()) {
+                // Crear un objeto Review a partir de los datos de la fila
+                int id = resultSet.getInt("Id");
+                int idIntent = resultSet.getInt("IdIntent");
+                int idReviewer = resultSet.getInt("IdReviewer");
+                int valoracion = resultSet.getInt("Valoracio");
+                String comentario = resultSet.getString("Comentari");
+
+                Review review = new Review(id, idIntent, idReviewer, valoracion, comentario);
+                reviews.add(review); // Añadir la reseña a la lista
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return reviews; // Devolver la lista de reseñas
+    }
    
 
 

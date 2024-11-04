@@ -12,10 +12,11 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import spdvi.fitnesscasesnoves.dataAcces.LoginDataAccess;
 
 /**
  *
- * @author Rulox
+ * @author Raül Lama
  */
 public class LogIn extends javax.swing.JFrame {
     
@@ -50,15 +51,12 @@ private String password; // Para almacenar el valor de jPasswordField1
             
             }
     });
-
-    // Acción para el botón jButton1
-   // jButton1.addActionListener(e -> validarUsuario());
 }
 
-// Método que valida el usuario contra la base de datos
+// Método que valida el usuario en la base de datos
 private void validarUsuario() {
     // Llamar a la base de datos para verificar si el usuario existe
-    DataAccess da = new DataAccess();
+    LoginDataAccess da = new LoginDataAccess();
     Usuari user = da.getUsuarioByUsername(username); // Método que consulta el usuario por nombre
 
     // Verifica si el campo username está vacío
