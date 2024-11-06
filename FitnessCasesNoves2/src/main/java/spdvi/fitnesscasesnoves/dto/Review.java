@@ -9,6 +9,7 @@ package spdvi.fitnesscasesnoves.dto;
  * @author Rulox
  */
 public class Review {
+
     private int id;              // ID de la reseña
     private int idIntent;        // ID del intent asociado
     private int idReviewer;      // ID del revisor
@@ -66,4 +67,3 @@ public class Review {
         this.comentario = comentario;
     }
 }
-

@@ -1,11 +1,11 @@
 package spdvi.fitnesscasesnoves.dto;
 
-
 /**
  *
  * @author aleja
  */
 public class Usuari {
+
     private int id;
     private String nom;
     private String email;
@@ -22,7 +22,8 @@ public class Usuari {
         this.Isinstructor = Isinstructor;
     }
 
-    public Usuari(){}
+    public Usuari() {
+    }
 
     public int getId() {
         return id;
@@ -71,7 +72,5 @@ public class Usuari {
     public void setIsinstructor(boolean Isinstructor) {
         this.Isinstructor = Isinstructor;
     }
-    
 
-   
 }

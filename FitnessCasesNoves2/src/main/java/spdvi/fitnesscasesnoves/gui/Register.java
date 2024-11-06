@@ -48,6 +48,7 @@ public class Register extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setText("Nom");
 
@@ -173,17 +174,17 @@ public class Register extends javax.swing.JFrame {
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+
         Usuari nouUsuari = new Usuari();
         nouUsuari.setNom(jTextNom.getText());
         nouUsuari.setEmail(jTextEmail.getText());
-        String passwordHash =  BCrypt.withDefaults().hashToString(12, jPasswordField1.getPassword());
+        String passwordHash = BCrypt.withDefaults().hashToString(12, jPasswordField1.getPassword());
         nouUsuari.setPasswordHash(passwordHash);
         nouUsuari.setIsinstructor(jCheckBox2.isSelected());
-        
+
         DataAccess da = new DataAccess();
         da.registerUser(nouUsuari);
-        
+
         LogIn Label3 = new LogIn();
         Label3.setVisible(true);
         this.setVisible(false);
@@ -199,12 +200,12 @@ public class Register extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 // Limpiar datos de sesión aquí si es necesario
-   //this.dispose();
-    // Ocultar el JFrame actual
-    this.setVisible(false);
-    
-    // Crear y mostrar el JFrame de inicio de sesión
-    LogIn loginFrame = new LogIn(); 
+        //this.dispose();
+        // Ocultar el JFrame actual
+        this.setVisible(false);
+
+        // Crear y mostrar el JFrame de inicio de sesión
+        LogIn loginFrame = new LogIn();
     loginFrame.setVisible(true);    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**

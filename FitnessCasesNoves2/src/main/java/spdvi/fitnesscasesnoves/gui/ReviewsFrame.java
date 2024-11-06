@@ -21,6 +21,8 @@ public class ReviewsFrame extends javax.swing.JFrame {
      * Creates new form ReviewsFrame
      */
     public ReviewsFrame() {
+        
+        // TERMINAR LOS 2 BOTONES
         initComponents();
         insertarReviewsAlJTable();
         this.setLocationRelativeTo(null); // esto es para que se centre en la pantalla
@@ -44,6 +46,7 @@ public class ReviewsFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -120,7 +123,7 @@ public class ReviewsFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        TerceraVentana tca = new TerceraVentana();
+        PaginaPrincipal tca = new PaginaPrincipal();
         tca.setVisible(rootPaneCheckingEnabled);
         this.setVisible(false);
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -128,56 +131,56 @@ public class ReviewsFrame extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
-public final void insertarReviewsAlJTable() {
-    DataAccess da = new DataAccess();
-    ArrayList<Review> reviews = da.getReviews(); // Obtener la lista de reviews desde la base de datos
+    public final void insertarReviewsAlJTable() {
+        DataAccess da = new DataAccess();
+        ArrayList<Review> reviews = da.getReviews(); // Obtener la lista de reviews desde la base de datos
 
-    DefaultTableModel model = (DefaultTableModel) jTable1.getModel(); // Suponiendo que el JTable para reviews se llama jTable2
-    model.setRowCount(0); // Limpiar las filas anteriores del JTable
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel(); // Suponiendo que el JTable para reviews se llama jTable2
+        model.setRowCount(0); // Limpiar las filas anteriores del JTable
 
-    // Limpiar columnas anteriores si ya estaban creadas
-    model.setColumnCount(0);
+        // Limpiar columnas anteriores si ya estaban creadas
+        model.setColumnCount(0);
 
-    // Añadir las columnas que deseas
-    model.addColumn("ID Review");
-    model.addColumn("ID Intent");
-    model.addColumn("ID Reviewer");
-    model.addColumn("Valoración");
-    model.addColumn("Comentario");
+        // Añadir las columnas que deseas
+        model.addColumn("ID Review");
+        model.addColumn("ID Intent");
+        model.addColumn("ID Reviewer");
+        model.addColumn("Valoración");
+        model.addColumn("Comentario");
 
-    // Iterar sobre cada review y agregarlo al JTable
-    for (Review review : reviews) {
-        // Crear un arreglo de objetos para cada fila (review)
-        Object[] row = {
-            review.getId(),            // ID Review
-            review.getIdIntent(),     // ID Intent asociado
-            review.getIdReviewer(),    // ID del revisor
-            review.getValoracion(),    // Valoración
-            review.getComentario()      // Comentario
-        };
-        model.addRow(row); // Agregar la fila al modelo de la tabla
-    }
+        // Iterar sobre cada review y agregarlo al JTable
+        for (Review review : reviews) {
+            // Crear un arreglo de objetos para cada fila (review)
+            Object[] row = {
+                review.getId(), // ID Review
+                review.getIdIntent(), // ID Intent asociado
+                review.getIdReviewer(), // ID del revisor
+                review.getValoracion(), // Valoración
+                review.getComentario() // Comentario
+            };
+            model.addRow(row); // Agregar la fila al modelo de la tabla
+        }
 
-    // Añadir ListSelectionListener para detectar la fila seleccionada
-    jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-        @Override
-        public void valueChanged(ListSelectionEvent event) {
-            if (!event.getValueIsAdjusting()) {
-                int selectedRow = jTable1.getSelectedRow();
-                if (selectedRow != -1) {
-                    // Obtener el ID del review seleccionado (columna 0)
-                    Object id = jTable1.getValueAt(selectedRow, 0);
-                    System.out.println("Id del review seleccionado: " + id);
+        // Añadir ListSelectionListener para detectar la fila seleccionada
+        jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent event) {
+                if (!event.getValueIsAdjusting()) {
+                    int selectedRow = jTable1.getSelectedRow();
+                    if (selectedRow != -1) {
+                        // Obtener el ID del review seleccionado (columna 0)
+                        Object id = jTable1.getValueAt(selectedRow, 0);
+                        System.out.println("Id del review seleccionado: " + id);
 
-                    // Mostrar el ID del review seleccionado en el JLabel o JTextField
-                    jLabel1.setText("Id del review seleccionado: " + id.toString());
+                        // Mostrar el ID del review seleccionado en el JLabel o JTextField
+                        jLabel1.setText("Id del review seleccionado: " + id.toString());
 
-                    // Puedes realizar otras acciones con el ID del review seleccionado si es necesario
+                        // Puedes realizar otras acciones con el ID del review seleccionado si es necesario
+                    }
                 }
             }
-        }
-    });
-}
+        });
+    }
 
     /**
      * @param args the command line arguments

@@ -1,125 +1,25 @@
 package spdvi.fitnesscasesnoves.gui;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
-import spdvi.fitnesscasesnoves.dto.Usuari;
-import spdvi.fitnesscasesnoves.dataAcces.DataAccess;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-import spdvi.fitnesscasesnoves.dataAcces.LoginDataAccess;
+import spdvi.fitnesscasesnoves.logica.logicaLogin;
 
 /**
  *
  * @author Raül Lama
  */
 public class LogIn extends javax.swing.JFrame {
-    
-    // Variables para almacenar los valores de jTextPane1 y jPasswordField1
-private String username; // Para almacenar el valor de jTextPane1
-private String password; // Para almacenar el valor de jPasswordField1
 
-   
+    private String username; // Para almacenar el valor de jTextPane1
+    private String password; // Para almacenar el valor de jPasswordField1
+    public static int usuarioId; // Variable estática para almacenar el ID del usuario logueado
+
     public LogIn() {
         initComponents();
-        this.setLocationRelativeTo(null);// esto es para que se centre en la pantalla
+        this.setLocationRelativeTo(null);
+        focusListenerr();
 
-        
-        // Añadir FocusListener a jTextPane1 para capturar el valor cuando se pierda el foco
-    jTextPaneUsuari.addFocusListener(new FocusAdapter() {
-        @Override
-        public void focusLost(FocusEvent e) {
-            // Guardar el valor en la variable username cuando se pierda el foco
-            username = jTextPaneUsuari.getText();
-        
-            
-        }
-    });
-    
-    // Añadir FocusListener a jPasswordField1 para capturar el valor cuando se pierda el foco
-    jLabelTitolUsuari.addFocusListener(new FocusAdapter() {
-        @Override
-        public void focusLost(FocusEvent e) {
-            // Guardar el valor en la variable password cuando se pierda el foco
-            password = new String(jLabelTitolUsuari.getPassword()); // Convierte a String
-            
-            
-            }
-    });
-}
-
-// Método que valida el usuario en la base de datos
-private void validarUsuario() {
-    // Llamar a la base de datos para verificar si el usuario existe
-    LoginDataAccess da = new LoginDataAccess();
-    Usuari user = da.getUsuarioByUsername(username); // Método que consulta el usuario por nombre
-
-    // Verifica si el campo username está vacío
-    if (username == null || username.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "El campo de usuario no puede estar vacío.");
-        return;
     }
-
-    System.out.println("Usuario existe.");
-
-    if (user != null) {
-        // Comparar la contraseña ingresada con la contraseña de la base de datos
-        if (BCrypt.verifyer().verify(password.toCharArray(), user.getPasswordHash()).verified) { // Usar BCrypt para validar la contraseña
-            // Validar si el usuario es instructor
-            if (user.isInstructor() == true) {
-                // Si todo está bien, entra en el JFrame siguiente
-                TerceraVentana terceraVentana = new TerceraVentana(); // instancia de la siguiente clase 'ventana'
-                terceraVentana.setVisible(true);
-                this.setVisible(false);
-            } else {
-                // Si no es instructor, mostrar mensaje de error
-                JOptionPane.showMessageDialog(this, "No tiene acceso por no ser instructor.");
-            }
-        } else {
-            // Si la contraseña no coincide, mostrar mensaje de error
-            JOptionPane.showMessageDialog(this, "Contraseña incorrecta.");
-        }
-    } else {
-        // Si el usuario no existe, mostrar mensaje de error
-        JOptionPane.showMessageDialog(this, "El usuario no existe.");
-    }
-}
-
-    public Usuari getUsuarioByUsername(String username) {
-    String sql = "SELECT * FROM usuaris WHERE Nom = ?";
-    Usuari user = null;
-
-    try (Connection connection = getConnection();
-         PreparedStatement stmt = connection.prepareStatement(sql)) {
-        
-        stmt.setString(1, username); // Asignar el nombre de usuario al query
-        ResultSet resultSet = stmt.executeQuery();
-
-        if (resultSet.next()) {
-            // Crear el objeto Usuario con los datos recuperados de la base de datos
-            user = new Usuari(
-                resultSet.getInt("Id"),
-                resultSet.getString("Nom"),
-                resultSet.getString("Email"),
-                resultSet.getString("PasswordHash"),
-                    
-                // resultSet.getBytes("Foto"),
-                resultSet.getBoolean("IsInstructor")
-            );
-        }
-    } catch (SQLException ex) {
-        Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
-    }
-
-    return user;
-}
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -140,6 +40,7 @@ private void validarUsuario() {
         jButtonRegistre = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jButtonEntrarALaApp.setText("Entrar a la app");
         jButtonEntrarALaApp.addActionListener(new java.awt.event.ActionListener() {
@@ -226,21 +127,50 @@ private void validarUsuario() {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public void focusListenerr() {
+        // Añadir FocusListener a jTextPane1 para capturar el valor cuando se pierda el foco
+        jTextPaneUsuari.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                // Guardar el valor en la variable username cuando se pierda el foco
+                username = jTextPaneUsuari.getText();
+            }
+        });
+
+        // Añadir FocusListener a jPasswordField1 para capturar el valor cuando se pierda el foco
+        jLabelTitolUsuari.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                // Guardar el valor en la variable password cuando se pierda el foco
+                password = new String(jLabelTitolUsuari.getPassword()); // Convierte a String
+            }
+        });
+    }
+
     private void jLabelTitolUsuariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jLabelTitolUsuariActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jLabelTitolUsuariActionPerformed
 
     private void jButtonEntrarALaAppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEntrarALaAppActionPerformed
+        boolean loginValido = logicaLogin.validarUsuario(username, password); // Llama a LogicaLogin
 
-        validarUsuario();
+        if (loginValido) {
+            System.out.println("Usuari Instructor.");
+            PaginaPrincipal terceraVentana = new PaginaPrincipal();
+            terceraVentana.setVisible(true);
+            this.setVisible(false);
+        } else {
+            // Mensajes de error ya están gestionados en LogicaLogin
+        }
     }//GEN-LAST:event_jButtonEntrarALaAppActionPerformed
 
     private void jButtonRegistreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegistreActionPerformed
         Register rgstr = new Register();
         rgstr.setVisible(true);
         this.setVisible(false);
+        //PONER this.dispose();
     }//GEN-LAST:event_jButtonRegistreActionPerformed
-         /**
+    /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -269,6 +199,18 @@ private void validarUsuario() {
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -277,7 +219,6 @@ private void validarUsuario() {
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonEntrarALaApp;
     private javax.swing.JButton jButtonRegistre;
@@ -288,8 +229,4 @@ private void validarUsuario() {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextPane jTextPaneUsuari;
     // End of variables declaration//GEN-END:variables
-
-    private Connection getConnection() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }

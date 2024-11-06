@@ -1,26 +1,20 @@
 package spdvi.fitnesscasesnoves.gui;
 
-import java.awt.Color;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.Timer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import spdvi.fitnesscasesnoves.dataAcces.DataAccess;
 import spdvi.fitnesscasesnoves.dto.Intents;
-import spdvi.fitnesscasesnoves.dto.Usuari;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author Rulox
@@ -31,10 +25,12 @@ public class IntentsFrame extends javax.swing.JFrame {
      * Creates new form Intents
      */
     public IntentsFrame() {
+        
+        //ACABAR BOTON EDITAR INTENT
         initComponents();
         this.setLocationRelativeTo(null);
         insertarIntentsAlJtext();
-        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -54,6 +50,7 @@ public class IntentsFrame extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -143,145 +140,139 @@ public class IntentsFrame extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
 
-        TerceraVentana tca = new TerceraVentana();
+        PaginaPrincipal tca = new PaginaPrincipal();
         tca.setVisible(rootPaneCheckingEnabled);
         this.setVisible(false);
-                
+
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 // Verificar si se ha seleccionado una fila en jTable1
-    int selectedRow = jTable1.getSelectedRow();
+        int selectedRow = jTable1.getSelectedRow();
 
-    if (selectedRow != -1) { // Si una fila está seleccionada
-        // Obtener el ID del intent seleccionado (ajusta según tu modelo de datos)
-        String intentId = jTable1.getValueAt(selectedRow, 0).toString(); // ID del intent
+        if (selectedRow != -1) { // Si una fila está seleccionada
+            // Obtener el ID del intent seleccionado (ajusta según tu modelo de datos)
+            String intentId = jTable1.getValueAt(selectedRow, 0).toString(); // ID del intent
 
-        // Crear el mensaje del modal
-        String mensaje = "¿Estás seguro de querer eliminar el intent con ID " + intentId + "?";
-        
-        // Mostrar el modal de confirmación
-        int respuesta = JOptionPane.showConfirmDialog(this, mensaje, "Confirmar eliminación", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            // Crear el mensaje del modal
+            String mensaje = "¿Estás seguro de querer eliminar el intent con ID " + intentId + "?";
 
-        // Verificar la respuesta del usuario
-        if (respuesta == JOptionPane.YES_OPTION) {
-            // Lógica para eliminar el intent de la base de datos
-            DataAccess da = new DataAccess();
-            try {
-                da.eliminarReviewsPorIntentId(Integer.parseInt(intentId));
-                da.eliminarIntent(Integer.parseInt(intentId)); 
-            } catch (SQLException ex) {
-                Logger.getLogger(IntentsFrame.class.getName()).log(Level.SEVERE, null, ex);
+            // Mostrar el modal de confirmación
+            int respuesta = JOptionPane.showConfirmDialog(this, mensaje, "Confirmar eliminación", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+            // Verificar la respuesta del usuario
+            if (respuesta == JOptionPane.YES_OPTION) {
+                // Lógica para eliminar el intent de la base de datos
+                DataAccess da = new DataAccess();
+                try {
+                    da.eliminarReviewsPorIntentId(Integer.parseInt(intentId));
+                    da.eliminarIntent(Integer.parseInt(intentId));
+                } catch (SQLException ex) {
+                    Logger.getLogger(IntentsFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                // Actualizar la tabla después de eliminar
+                insertarIntentsAlJtext(); // Vuelve a cargar la tabla sin el intent eliminado
+                JOptionPane.showMessageDialog(this, "Intent eliminado con éxito."); // Mensaje de éxito
             }
-
-            // Actualizar la tabla después de eliminar
-            insertarIntentsAlJtext(); // Vuelve a cargar la tabla sin el intent eliminado
-            JOptionPane.showMessageDialog(this, "Intent eliminado con éxito."); // Mensaje de éxito
-        }
-        // Si el usuario selecciona NO, simplemente no hacemos nada
-    } else {
-        JOptionPane.showMessageDialog(this, "Por favor, selecciona un intent para eliminar."); // Mensaje si no hay selección
+            // Si el usuario selecciona NO, simplemente no hacemos nada
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, selecciona un intent para eliminar."); // Mensaje si no hay selección
     }    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-    DataAccess da = new DataAccess();
-    
-    // Obtener la fila seleccionada
-    int selectedRow = jTable1.getSelectedRow();
+        DataAccess da = new DataAccess();
 
-    // Verifica si una fila está seleccionada
-    if (selectedRow != -1) {
-        // Crear un objeto Intents con los datos de la fila seleccionada
-        Intents intent = new Intents(
-            Integer.parseInt(jTable1.getValueAt(selectedRow, 0).toString()), // id
-            Integer.parseInt(jTable1.getValueAt(selectedRow, 1).toString()), // idUsuari
-            Integer.parseInt(jTable1.getValueAt(selectedRow, 2).toString()), // idExercici
-            (jTable1.getValueAt(selectedRow, 3) != "" ? jTable1.getValueAt(selectedRow, 3).toString() : null), // timestampInici
-            (jTable1.getValueAt(selectedRow, 4) != "" ? jTable1.getValueAt(selectedRow, 4).toString() : null), // timestampFi
-            (jTable1.getValueAt(selectedRow, 5) != "" ? jTable1.getValueAt(selectedRow, 5).toString() : null)  // videoFile
-        );
+        // Obtener la fila seleccionada
+        int selectedRow = jTable1.getSelectedRow();
 
-        // Mostrar modal de confirmación
-        int respuesta = JOptionPane.showConfirmDialog(this, "Estàs segur que vols modificar l'usuari amb id: " + intent.getId()+ "?", 
-                                                      "Confirmar modificació", JOptionPane.YES_NO_OPTION, 
-                                                      JOptionPane.QUESTION_MESSAGE);
-        if (respuesta == JOptionPane.YES_OPTION) {
-            // Guardar el objeto Intents en la base de datos
-            da.actualizarIntent(intent);
+        // Verifica si una fila está seleccionada
+        if (selectedRow != -1) {
+            // Crear un objeto Intents con los datos de la fila seleccionada
+            Intents intent = new Intents(
+                    Integer.parseInt(jTable1.getValueAt(selectedRow, 0).toString()), // id
+                    Integer.parseInt(jTable1.getValueAt(selectedRow, 1).toString()), // idUsuari
+                    Integer.parseInt(jTable1.getValueAt(selectedRow, 2).toString()), // idExercici
+                    (jTable1.getValueAt(selectedRow, 3) != "" ? jTable1.getValueAt(selectedRow, 3).toString() : null), // timestampInici
+                    (jTable1.getValueAt(selectedRow, 4) != "" ? jTable1.getValueAt(selectedRow, 4).toString() : null), // timestampFi
+                    (jTable1.getValueAt(selectedRow, 5) != "" ? jTable1.getValueAt(selectedRow, 5).toString() : null) // videoFile
+            );
 
-            JOptionPane.showMessageDialog(this, "Canvis desats correctament a la base de dades.");
+            // Mostrar modal de confirmación
+            int respuesta = JOptionPane.showConfirmDialog(this, "Estàs segur que vols modificar l'usuari amb id: " + intent.getId() + "?",
+                    "Confirmar modificació", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+            if (respuesta == JOptionPane.YES_OPTION) {
+                // Guardar el objeto Intents en la base de datos
+                da.actualizarIntent(intent);
+
+                JOptionPane.showMessageDialog(this, "Canvis desats correctament a la base de dades.");
+            }
+            // Si el usuario selecciona "NO", no se realiza ninguna acción
+        } else {
+            JOptionPane.showMessageDialog(this, "Si us plau, selecciona una fila per editar.");
         }
-        // Si el usuario selecciona "NO", no se realiza ninguna acción
-    } else {
-        JOptionPane.showMessageDialog(this, "Si us plau, selecciona una fila per editar.");
-    }
-    
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTable1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTable1PropertyChange
         // TODO add your handling code here:
     }//GEN-LAST:event_jTable1PropertyChange
-    
-    
-    
-    
-    
-    
-    
-    public final void insertarIntentsAlJtext() {
-    DataAccess da = new DataAccess();
-ArrayList<Intents> intents = da.getIntents(); // Obtener la lista de intents desde la base de datos
 
-DefaultTableModel model = (DefaultTableModel) jTable1.getModel(); // Obtener el modelo de la tabla
-model.setRowCount(0); // Limpiar las filas anteriores del JTable
+    public final void insertarIntentsAlJtext() {
+        DataAccess da = new DataAccess();
+        ArrayList<Intents> intents = da.getIntents(); // Obtener la lista de intents desde la base de datos
+
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel(); // Obtener el modelo de la tabla
+        model.setRowCount(0); // Limpiar las filas anteriores del JTable
 
 // Limpiar columnas anteriores si ya estaban creadas
-model.setColumnCount(0);
+        model.setColumnCount(0);
 
 // Añadir las columnas que deseas
-model.addColumn("ID Intent");
-model.addColumn("ID Usuari");
-model.addColumn("ID Exercici");
-model.addColumn("Timestamp Inici");
-model.addColumn("Timestamp Fi");
-model.addColumn("Video File");
+        model.addColumn("ID Intent");
+        model.addColumn("ID Usuari");
+        model.addColumn("ID Exercici");
+        model.addColumn("Timestamp Inici");
+        model.addColumn("Timestamp Fi");
+        model.addColumn("Video File");
 
 // Iterar sobre cada intent y agregarlo al JTable
-for (Intents intent : intents) {
-    // Crear un arreglo de objetos para cada fila (intent)
-    Object[] row = {
-        intent.getId(),
-        intent.getIdUsuari(),
-        intent.getIdExercici(),
-        intent.getTimestamp_Inici(),
-        intent.getTimestamp_Fi(),
-        intent.getVideofile()
-    };
-    model.addRow(row); // Agregar la fila al modelo de la tabla
-}
-
+        for (Intents intent : intents) {
+            // Crear un arreglo de objetos para cada fila (intent)
+            Object[] row = {
+                intent.getId(),
+                intent.getIdUsuari(),
+                intent.getIdExercici(),
+                intent.getTimestamp_Inici(),
+                intent.getTimestamp_Fi(),
+                intent.getVideofile()
+            };
+            model.addRow(row); // Agregar la fila al modelo de la tabla
+        }
 
 // Añadir ListSelectionListener para detectar la fila seleccionada
-jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-    @Override
-    public void valueChanged(ListSelectionEvent event) {
-        if (!event.getValueIsAdjusting()) {
-            int selectedRow = jTable1.getSelectedRow();
-            if (selectedRow != -1) {
-                // Obtener el ID del intent seleccionado (columna 0)
-                Object id = jTable1.getValueAt(selectedRow, 0);
-                System.out.println("Id del intent seleccionado: " + id);
+        jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent event) {
+                if (!event.getValueIsAdjusting()) {
+                    int selectedRow = jTable1.getSelectedRow();
+                    if (selectedRow != -1) {
+                        // Obtener el ID del intent seleccionado (columna 0)
+                        Object id = jTable1.getValueAt(selectedRow, 0);
+                        System.out.println("Id del intent seleccionado: " + id);
 
-                // Mostrar el ID del intent seleccionado en el JTextField
-                jLabel1.setText("Id del intent seleccionado: " + id.toString());
+                        // Mostrar el ID del intent seleccionado en el JTextField
+                        jLabel1.setText("Id del intent seleccionado: " + id.toString());
 
-                // Puedes realizar otras acciones con el ID del intent seleccionado si es necesario
+                        // Puedes realizar otras acciones con el ID del intent seleccionado si es necesario
+                    }
+                }
             }
-        }
-    }
-});
+        });
 
-}
+    }
+
     /**
      * @param args the command line arguments
      */

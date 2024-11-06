@@ -7,12 +7,12 @@ import spdvi.fitnesscasesnoves.dataAcces.DataAccess;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author Rulox
  */
 public class CrearExercici extends javax.swing.JFrame {
+
     static int usuariIdd;
 
     /**
@@ -41,6 +41,7 @@ public class CrearExercici extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setText("Descripció nou exercici");
 
@@ -109,36 +110,35 @@ public class CrearExercici extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldNomExerciciActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    String nombreExercici = jTextFieldNomExercici.getText().trim();
-    String descripcionExercici = jTextFieldDescripcioExercici.getText().trim();
+        String nombreExercici = jTextFieldNomExercici.getText().trim();
+        String descripcionExercici = jTextFieldDescripcioExercici.getText().trim();
 
-    if (nombreExercici.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "El nom de l'exercici no pot esta buit.");
-        return; // Sorti del metode si el nom de l'exercici esta buit 
-    }
+        if (nombreExercici.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El nom de l'exercici no pot esta buit.");
+            return; // Sorti del metode si el nom de l'exercici esta buit 
+        }
 
-    if (descripcionExercici.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "La descripcio de l'exercici no pot estar buida.");
-        return; // Sorti del metode si la descripcio esta buida 
-    }
+        if (descripcionExercici.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "La descripcio de l'exercici no pot estar buida.");
+            return; // Sorti del metode si la descripcio esta buida 
+        }
 
-   
-    DataAccess dataAccess = new DataAccess();
-    int idExercici = dataAccess.crearExerciciEnBD(usuariIdd, nombreExercici, descripcionExercici);
+        DataAccess dataAccess = new DataAccess();
+        int idExercici = dataAccess.crearExerciciEnBD(usuariIdd, nombreExercici, descripcionExercici);
 
-    // Verificar si la inserció ha estat exitosa
-    if (idExercici != -1) {
-        JOptionPane.showMessageDialog(this, "Ejercicio creado exitosamente con ID: " + idExercici);        
-        // aqui tengo que seguir trabajando hacer un set visible false etc..
-    } else {
-        JOptionPane.showMessageDialog(this, "Error al crear el ejercicio.");
+        // Verificar si la inserció ha estat exitosa
+        if (idExercici != -1) {
+            JOptionPane.showMessageDialog(this, "Ejercicio creado exitosamente con ID: " + idExercici);
+            // aqui tengo que seguir trabajando hacer un set visible false etc..
+        } else {
+            JOptionPane.showMessageDialog(this, "Error al crear el ejercicio.");
     }    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-       
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new CrearExercici().setVisible(true);
@@ -146,16 +146,16 @@ public class CrearExercici extends javax.swing.JFrame {
         });
     }
 
-public void setUsuario(int usuarioId) {
-    DataAccess da = new DataAccess();
-    if (usuarioId > 0) {
-        // Obte el nom de l'usuari utilizant l'ID
-        usuariIdd = usuarioId;
-        String nombreUsuario = da.getNombreById(usuarioId);
-        
-        jLabelNomUsuari.setText("Crean exercici per l'usuari amb id: " + usuarioId + ". I amb el nom: " + nombreUsuario);
+    public void setUsuario(int usuarioId) {
+        DataAccess da = new DataAccess();
+        if (usuarioId > 0) {
+            // Obte el nom de l'usuari utilizant l'ID
+            usuariIdd = usuarioId;
+            String nombreUsuario = da.getNombreById(usuarioId);
+
+            jLabelNomUsuari.setText("Crean exercici per l'usuari amb id: " + usuarioId + ". I amb el nom: " + nombreUsuario);
+        }
     }
-}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

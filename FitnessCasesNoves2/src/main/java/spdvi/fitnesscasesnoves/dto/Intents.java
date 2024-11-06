@@ -9,6 +9,7 @@ package spdvi.fitnesscasesnoves.dto;
  * @author Rulox
  */
 public class Intents {
+
     int id;
     int idUsuari;
     int idExercici;
@@ -30,9 +31,18 @@ public class Intents {
         this.id = id;
         this.nomExercici = nomExercici;
     }
-    
 
     public Intents(int id, int idUsuari, int idExercici, String Timestamp_Inici, String Timestamp_Fi, String videofile, String nomExercici) {
+        this.id = id;
+        this.idUsuari = idUsuari;
+        this.idExercici = idExercici;
+        this.Timestamp_Inici = Timestamp_Inici;
+        this.Timestamp_Fi = Timestamp_Fi;
+        this.videofile = videofile;
+        this.nomExercici = nomExercici;
+    }
+
+    public Intents() {
         this.id = id;
         this.idUsuari = idUsuari;
         this.idExercici = idExercici;
@@ -97,15 +107,10 @@ public class Intents {
     public void setNomExercici(String nomExercici) {
         this.nomExercici = nomExercici;
     }
-    
-    
 
     @Override
     public String toString() {
         return "Intents{" + "id=" + id + ", idUsuari=" + idUsuari + ", idExercici=" + idExercici + ", Timestamp_Inici=" + Timestamp_Inici + ", Timestamp_Fi=" + Timestamp_Fi + ", videofile=" + videofile + '}';
     }
-    
-    
-    
-    
+
 }
