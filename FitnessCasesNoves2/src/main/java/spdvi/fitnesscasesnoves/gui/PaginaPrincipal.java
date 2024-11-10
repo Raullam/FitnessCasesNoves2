@@ -28,15 +28,16 @@ public final class PaginaPrincipal extends javax.swing.JFrame {
      * Creates new form TerceraVentana
      */
     public PaginaPrincipal() {
-        
+
         // FALTA 
-         // PODER EDITAR UN USUARIO 
+        // PODER EDITAR UN USUARIO 
         initComponents();
         this.setLocationRelativeTo(null); // esto es para que se centre en la pantalla
         intentosSinReview();
         // Instanciar la lógica de la página principal pasando el JFrame y el JTable
         logicaPaginaPrincipal = new LogicaPaginaPrincipal(this, jTable1, jLabel3, jList1);
         setResizable(false);
+        setTitle("Pantalla principal");
     }
 
     /**
@@ -71,8 +72,6 @@ public final class PaginaPrincipal extends javax.swing.JFrame {
         jButton10 = new javax.swing.JButton();
         jButton11 = new javax.swing.JButton();
         jMenuBar2 = new javax.swing.JMenuBar();
-        jMenu3 = new javax.swing.JMenu();
-        jMenu4 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
         jMenu6 = new javax.swing.JMenu();
 
@@ -187,6 +186,11 @@ public final class PaginaPrincipal extends javax.swing.JFrame {
         });
 
         jButton4.setText("Editar");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Tancar la sessió");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -230,13 +234,7 @@ public final class PaginaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jMenu3.setText("Usuaris");
-        jMenuBar2.add(jMenu3);
-
-        jMenu4.setText("Intents");
-        jMenuBar2.add(jMenu4);
-
-        jMenu5.setText("Revisions");
+        jMenu5.setText("Qui som");
         jMenuBar2.add(jMenu5);
 
         jMenu6.setText("Tanca la sesió");
@@ -310,8 +308,10 @@ public final class PaginaPrincipal extends javax.swing.JFrame {
         logicaPaginaPrincipal.eliminarUsuarioSeleccionado();
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    //BOTO CREAR EXERCICI
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // Verificar si se ha seleccionado una fila en jTable1
+
+// Verificar si se ha seleccionado una fila en jTable1
         int selectedRow = jTable1.getSelectedRow();
 
         if (selectedRow != -1) { // Si una fila está seleccionada
@@ -339,14 +339,14 @@ public final class PaginaPrincipal extends javax.swing.JFrame {
     private void jMenu6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu6ActionPerformed
 
     }//GEN-LAST:event_jMenu6ActionPerformed
-
+    // TANQUEM LA SESIO DE L'USUARI
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // Creao un nou Jframe de LogIn i el mostro, per ultim tanquem la finestra actual.
         LogIn loginFrame = new LogIn();
         loginFrame.setVisible(true);
         this.dispose(); // tanquem la finestra CrearExercici.java
     }//GEN-LAST:event_jButton5ActionPerformed
-
+// TANQUEM LA SESIO DE L'USUARI DESDE EL MENUVAR
     private void jMenu6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu6MouseClicked
         // Ocultar el JFrame actual
         this.dispose();
@@ -373,34 +373,49 @@ public final class PaginaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
-        if (evt.getClickCount() == 2) { // Verificar si se ha hecho un doble clic
-            int index = jList1.getSelectedIndex(); // Obtener el índice del elemento seleccionado
-            if (index != -1) {
-                String intent = jList1.getModel().getElementAt(index); // Obtener el intento seleccionado
+       if (evt.getClickCount() == 2) { // Verificar si se ha hecho un doble clic
+    int index = jList1.getSelectedIndex(); // Obtener el índice del elemento seleccionado
+    if (index != -1) {
+        String intent = jList1.getModel().getElementAt(index); // Obtener el intento seleccionado
 
-                // Extraer ID y ejercicio desde el String intent
-                int id = Integer.parseInt(intent.substring(4, 9).trim());
-                String exercici = intent.substring(10).trim();
+        int id;
+        String exercici = intent.substring(10).trim();
 
-                // Crear y mostrar la ventana DetallIntent
-                ReviewVideoFrame detallIntent = new ReviewVideoFrame(intent, id, exercici); // Crear la instancia de DetallIntent
+        // Verificar si el valor es "revi" o "revis" y salir si es alguno de estos
+        if (intent.contains("revi") || intent.contains("revis")) {
+            System.out.println("El valor es 'revi' o 'revis', no se realiza ninguna acción.");
+            return; // Salimos del método sin abrir la ventana
+        }
 
-                // Deshabilitar la ventana principal
-                this.setEnabled(false);
+        // Intentar convertir el ID a entero
+        try {
+            id = Integer.parseInt(intent.substring(4, 9).trim());
+        } catch (NumberFormatException e) {
+            // Manejar el error si el valor no se puede convertir a entero
+            System.out.println("Error: El valor no es un número entero válido.");
+            return; // Salimos del método sin abrir la ventana
+        }
 
-                // Añadir un WindowListener para volver a habilitar la ventana principal al cerrar DetallIntent
-                detallIntent.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosed(java.awt.event.WindowEvent e) {
-                        setEnabled(true); // Rehabilitar la ventana principal
-                        toFront(); // Asegura que la ventana principal esté al frente
-                    }
-                });
+        // Crear y mostrar la ventana DetallIntent solo si el ID es válido
+        ReviewVideoFrame detallIntent = new ReviewVideoFrame(intent, id, exercici);
 
-                detallIntent.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Para cerrar solo esta ventana
-                detallIntent.setLocationRelativeTo(this); // Centrar la ventana
-                detallIntent.setVisible(true); // Mostrar la ventana
+        // Deshabilitar la ventana principal
+        this.setEnabled(false);
+
+        // Añadir un WindowListener para volver a habilitar la ventana principal al cerrar DetallIntent
+        detallIntent.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                setEnabled(true); // Rehabilitar la ventana principal
+                toFront(); // Asegura que la ventana principal esté al frente
             }
+        });
+
+        detallIntent.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Para cerrar solo esta ventana
+        detallIntent.setLocationRelativeTo(this); // Centrar la ventana
+        detallIntent.setVisible(true); // Mostrar la ventana
+    }
+
     }    }//GEN-LAST:event_jList1MouseClicked
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
@@ -420,6 +435,10 @@ public final class PaginaPrincipal extends javax.swing.JFrame {
         ef.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        LogicaPaginaPrincipal.editarUsuarioSeleccionado();
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     // Metodo para cargar lista de intentos sin review para usarlo en el boton i al iniciar el jFrame
     public void intentosSinReview() {
@@ -501,8 +520,6 @@ public final class PaginaPrincipal extends javax.swing.JFrame {
     private javax.swing.JList<String> jList1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;

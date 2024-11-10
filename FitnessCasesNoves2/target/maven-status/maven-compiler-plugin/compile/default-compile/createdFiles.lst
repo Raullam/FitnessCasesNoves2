@@ -4,12 +4,14 @@ spdvi\fitnesscasesnoves\gui\CrearExercici$1.class
 spdvi\fitnesscasesnoves\gui\ReviewsFrame$1.class
 spdvi\fitnesscasesnoves\gui\Register$1.class
 spdvi\fitnesscasesnoves\gui\ReviewVideoFrame$1.class
+spdvi\fitnesscasesnoves\gui\tablemodels\IntentTableCellRenderer.class
 spdvi\fitnesscasesnoves\dto\Intents.class
 spdvi\fitnesscasesnoves\gui\ReviewsFrame.class
 spdvi\fitnesscasesnoves\gui\UsuarisFrame$1.class
 spdvi\fitnesscasesnoves\logica\UsuarisLogica.class
 spdvi\fitnesscasesnoves\gui\Register2.class
 spdvi\fitnesscasesnoves\gui\PaginaPrincipal$9.class
+spdvi\fitnesscasesnoves\gui\tablemodels\ReviewTableCellRenderer.class
 spdvi\fitnesscasesnoves\gui\App$4.class
 spdvi\fitnesscasesnoves\gui\LogIn$4.class
 spdvi\fitnesscasesnoves\logica\logicaNegoci.class
@@ -83,5 +85,6 @@ spdvi\fitnesscasesnoves\gui\IntentsFrame.class
 spdvi\fitnesscasesnoves\gui\ExercicisFrame$1.class
 spdvi\fitnesscasesnoves\gui\CrearExercici$3.class
 spdvi\fitnesscasesnoves\gui\PaginaPrincipal$12.class
+spdvi\fitnesscasesnoves\gui\PaginaPrincipal$15.class
 spdvi\fitnesscasesnoves\gui\PaginaPrincipal$2.class
 spdvi\fitnesscasesnoves\gui\LogIn$3.class

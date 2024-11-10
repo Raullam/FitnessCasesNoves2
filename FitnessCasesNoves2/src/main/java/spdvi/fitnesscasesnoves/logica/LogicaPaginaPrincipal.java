@@ -4,6 +4,7 @@
  */
 package spdvi.fitnesscasesnoves.logica;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,11 +25,11 @@ import spdvi.fitnesscasesnoves.gui.UsuarisFrame;
  */
 public class LogicaPaginaPrincipal {
 
-    private final JFrame parentFrame;
-    private final JTable jTable1;
+    private static JFrame parentFrame;
+    private static JTable jTable1;
     private final JTable jTable2;
-    private JLabel jLabel3;
-    private JList<String> jList1;
+    private static JLabel jLabel3;
+    private static JList<String> jList1;
     private DataAccess da;
 
     // Constructor que recibe el JFrame y JTable como parámetros
@@ -91,11 +92,68 @@ public class LogicaPaginaPrincipal {
         }
     }
 
-    public final void insertarUsuarisAlJtext() {
+    public static void editarUsuarioSeleccionado() {
+        int selectedRow = jTable1.getSelectedRow();
+
+        if (selectedRow != -1) { // Si una fila está seleccionada
+            String usuarioId = jTable1.getValueAt(selectedRow, 0).toString();
+            String usuarioNombre = jTable1.getValueAt(selectedRow, 1).toString();
+            String usuarioEmail = jTable1.getValueAt(selectedRow, 2).toString();
+            String usuarioPasswordHash = jTable1.getValueAt(selectedRow, 3).toString();
+
+            // Solicitar nuevos valores al usuario
+            String nuevoNombre = JOptionPane.showInputDialog(parentFrame, "Ingresa el nuevo nombre:", usuarioNombre);
+            if (nuevoNombre == null) { // Si el usuario cancela
+                JOptionPane.showMessageDialog(parentFrame, "Operació cancel·lada. No s'han realitzat canvis.");
+                return;
+            } else if (nuevoNombre.isEmpty()) { // Si el campo está vacío
+                JOptionPane.showMessageDialog(parentFrame, "El nom no pot estar buit. No s'han realitzat canvis.");
+                return;
+            }
+
+            String nuevoEmail = JOptionPane.showInputDialog(parentFrame, "Ingresa el nuevo email:", usuarioEmail);
+            if (nuevoEmail == null) { // Si el usuario cancela
+                JOptionPane.showMessageDialog(parentFrame, "Operació cancel·lada. No s'han realitzat canvis.");
+                return;
+            } else if (nuevoEmail.isEmpty()) { // Si el campo está vacío
+                JOptionPane.showMessageDialog(parentFrame, "El correu electrònic no pot estar buit. No s'han realitzat canvis.");
+                return;
+            }
+
+            String nuevaPassword = JOptionPane.showInputDialog(parentFrame, "Ingresa la nueva contraseña:", usuarioPasswordHash);
+            if (nuevaPassword == null) { // Si el usuario cancela
+                JOptionPane.showMessageDialog(parentFrame, "Operació cancel·lada. No s'han realitzat canvis.");
+                return;
+            } else if (nuevaPassword.isEmpty()) { // Si el campo está vacío
+                JOptionPane.showMessageDialog(parentFrame, "La contrasenya no pot estar buida. No s'han realitzat canvis.");
+                return;
+            }
+
+            // Encriptar la contraseña
+            String nuevoPasswordHash = BCrypt.withDefaults().hashToString(12, nuevaPassword.toCharArray());
+
+            // Intentar actualizar el usuario
+            try {
+                DataAccess da = new DataAccess();
+                da.actualizarUsuario(Integer.parseInt(usuarioId), nuevoNombre, nuevoEmail, nuevoPasswordHash);
+                insertarUsuarisAlJtext(); // Actualizar tabla
+                JOptionPane.showMessageDialog(parentFrame, "Usuari editat amb èxit.");
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(parentFrame, "Error en el format de dades.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(parentFrame, "Per favor, selecciona un usuari per editar.");
+        }
+    }
+
+    public static void insertarUsuarisAlJtext() {
         DataAccess da = new DataAccess();
         ArrayList<Usuari> usuaris = da.getUsuaris(); // Obtener la lista de usuarios desde la base de datos
 
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel(); // Obtener el modelo de la tabla
+        // Hacer la tabla no editable
+        jTable1.setDefaultEditor(Object.class, null);
+
         model.setRowCount(0); // Limpiar las filas anteriores del JTable
 
         // Limpiar columnas anteriores si ya estaban creadas

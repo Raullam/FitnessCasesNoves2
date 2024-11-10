@@ -26,6 +26,7 @@ public class UsuarisLogica {
     private final JTable jTable1;
     private final JTable jTable2;
     private JLabel jLabel3;
+    static int idusuariii = -1;
 
     public UsuarisLogica(UsuarisFrame aThis, JTable jTable1, JTable jTable2, JLabel jLabel3) {
         this.parentFrame = aThis;
@@ -41,6 +42,9 @@ public class UsuarisLogica {
         ArrayList<Usuari> usuaris = da.getUsuaris(); // Obtener la lista de usuarios desde la base de datos
 
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel(); // Obtener el modelo de la tabla
+            // Hacer la tabla no editable
+        jTable1.setDefaultEditor(Object.class, null);
+
         model.setRowCount(0); // Limpiar las filas anteriores del JTable
 
         // Limpiar columnas anteriores si ya estaban creadas
@@ -102,10 +106,12 @@ public class UsuarisLogica {
 
                         // Actualizar la etiqueta con el ID seleccionado
                         jLabel3.setText("Id del usuari seleccionat: " + id.toString());
+
+                        idusuariii = Integer.parseInt(id.toString());
                     }
                 }
             }
         });
     }
-
-}
+    public static int ididusuarii(){
+    return idusuariii;}}

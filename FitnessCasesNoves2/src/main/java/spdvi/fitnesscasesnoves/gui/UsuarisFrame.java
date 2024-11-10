@@ -21,7 +21,8 @@ public class UsuarisFrame extends javax.swing.JFrame {
     public UsuarisFrame() {
         initComponents();
         this.setLocationRelativeTo(null); // esto es para que se centre en la pantalla
-        UsuarisLogica ul = new UsuarisLogica(this, jTable1, jTable2, jLabel3);
+        UsuarisLogica ul = new UsuarisLogica(this, jTable1, jTable2, jLabel3IdUsuariSelecionat);
+        setTitle("Usuaris");
 
     }
 
@@ -34,14 +35,14 @@ public class UsuarisFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
+        jScrollPane1Usuaris = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        jScrollPane2Intents = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
+        jLabel1Usuaris = new javax.swing.JLabel();
+        jLabel2Intents = new javax.swing.JLabel();
+        jButton1Tornarenrere = new javax.swing.JButton();
+        jLabel3IdUsuariSelecionat = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -57,7 +58,7 @@ public class UsuarisFrame extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1Usuaris.setViewportView(jTable1);
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -75,20 +76,20 @@ public class UsuarisFrame extends javax.swing.JFrame {
                 jTable2MouseClicked(evt);
             }
         });
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2Intents.setViewportView(jTable2);
 
-        jLabel1.setText("Usuaris");
+        jLabel1Usuaris.setText("Usuaris");
 
-        jLabel2.setText("Intents");
+        jLabel2Intents.setText("Intents");
 
-        jButton1.setText("Tornar enrera");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButton1Tornarenrere.setText("Tornar enrera");
+        jButton1Tornarenrere.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButton1TornarenrereActionPerformed(evt);
             }
         });
 
-        jLabel3.setText("jLabel3");
+        jLabel3IdUsuariSelecionat.setText("Id del usuari seleccionat: ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -96,25 +97,25 @@ public class UsuarisFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(204, 204, 204)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel1Usuaris, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel2Intents, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(137, 137, 137))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton1Tornarenrere, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel3IdUsuariSelecionat, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jScrollPane1Usuaris, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(jScrollPane2Intents, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(35, 35, 35))
         );
         layout.setVerticalGroup(
@@ -122,42 +123,45 @@ public class UsuarisFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(44, 44, 44)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
+                    .addComponent(jLabel1Usuaris)
+                    .addComponent(jLabel2Intents))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2Intents, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1Usuaris, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel3)
+                .addComponent(jLabel3IdUsuariSelecionat)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton1Tornarenrere, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(17, 17, 17))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton1TornarenrereActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1TornarenrereActionPerformed
         PaginaPrincipal aa = new PaginaPrincipal();
         aa.setVisible(true);
         this.setVisible(false);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButton1TornarenrereActionPerformed
 
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
-        int selectedRow = jTable2.getSelectedRow(); // Obtener la fila seleccionada
-        if (selectedRow != -1) {
-            // Obtener los datos de la fila seleccionada
-            String idIntent = jTable2.getValueAt(selectedRow, 0).toString(); // ID del intento
-            int idUsuari = Integer.parseInt(jTable2.getValueAt(selectedRow, 1).toString()); // ID del usuario
-            String idExercici = jTable2.getValueAt(selectedRow, 2).toString(); // ID del ejercicio
-            String timestampInici = jTable2.getValueAt(selectedRow, 3).toString(); // Timestamp de inicio
-            String timestampFi = jTable2.getValueAt(selectedRow, 4).toString(); // Timestamp de fin
-            String videofile = jTable2.getValueAt(selectedRow, 5).toString(); // Archivo de video
+// Obtenim el text complet de jLabel3IdUsuariSelecionat
+        
+        int selectedRow = jTable2.getSelectedRow(); // Obtenir la fila seleccionada de jTable2
 
-            // Crear e inicializar el frame ReviewVideoFrame con los datos del intento
-            ReviewVideoFrame reviewFrame = new ReviewVideoFrame(idIntent, idUsuari, idExercici, timestampInici, timestampFi, videofile);
+        if (selectedRow != -1) { // Comprova que hi hagi files seleccionades a ambdues taules
+            // Obtenir els valors de la fila seleccionada de jTable2
+        int idIntent = Integer.parseInt(jTable2.getValueAt(selectedRow, 0).toString()); // ID del intent
+           
+
+            // Crear i inicialitzar el frame ReviewVideoFrame amb les dades de l'intent
+            ReviewVideoFrame reviewFrame = new ReviewVideoFrame(idIntent);
             reviewFrame.setVisible(true); // Mostrar el frame
+                                   
+
+        } else {
+            System.out.println("Selecciona una fila a ambdues taules abans de continuar.");
         }
     }//GEN-LAST:event_jTable2MouseClicked
 
@@ -198,12 +202,12 @@ public class UsuarisFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton jButton1Tornarenrere;
+    private javax.swing.JLabel jLabel1Usuaris;
+    private javax.swing.JLabel jLabel2Intents;
+    private javax.swing.JLabel jLabel3IdUsuariSelecionat;
+    private javax.swing.JScrollPane jScrollPane1Usuaris;
+    private javax.swing.JScrollPane jScrollPane2Intents;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     // End of variables declaration//GEN-END:variables

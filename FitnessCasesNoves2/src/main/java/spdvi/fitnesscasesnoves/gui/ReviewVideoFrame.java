@@ -19,7 +19,7 @@ import uk.co.caprica.vlcj.player.embedded.videosurface.VideoSurface;
 public class ReviewVideoFrame extends javax.swing.JFrame {
 
     private String idIntent;
-    private int id, idUsuari;
+    private int id, idUsuari,Idintentt;
     private String exercici;
     private String idExercici, timestampInici, timestampFi, videofile;
     private EmbeddedMediaPlayer mediaPlayer;
@@ -64,6 +64,17 @@ public class ReviewVideoFrame extends javax.swing.JFrame {
         ponerIdInstructorLabel();
 
     }
+     public ReviewVideoFrame(int Idintentt) {
+        this.Idintentt = Idintentt;
+        initComponents();
+        this.setLocationRelativeTo(null); // esto es para que se centre en la pantalla
+        dataAccess = new DataAccess();
+        jLabel1.setText(idIntent);
+        initializeVLCPlayer();
+        loadVideoFromIntent2();
+        ponerIdInstructorLabel();
+
+    }
 
     ReviewVideoFrame(String idIntent, int idUsuari, String idExercici, String timestampInici, String timestampFi, String videofile) {
         this.idIntent = idIntent;
@@ -78,6 +89,7 @@ public class ReviewVideoFrame extends javax.swing.JFrame {
         ponerIdInstructorLabel();
 
     }
+    
 
     private void initializeVLCPlayer() {
         mediaPlayerFactory = new MediaPlayerFactory();
@@ -99,6 +111,24 @@ public class ReviewVideoFrame extends javax.swing.JFrame {
         String labelText = jLabel1.getText();
         String intentIdString = labelText.substring(3, 8).trim();
         int intentId = Integer.parseInt(intentIdString);
+
+        // Usar DataAccess para obtener el archivo de video
+        String videoFilePath = dataAccess.getVideoFile(intentId);
+
+        if (videoFilePath != null) {
+            File videoFile = new File("videos/" + videoFilePath);
+            if (videoFile.exists()) {
+                mediaPlayer.media().startPaused(videoFile.getAbsolutePath());
+            } else {
+                System.out.println("El archivo de video no existe: " + videoFilePath);
+            }
+        } else {
+            System.out.println("No se encontró el video para el intento: " + intentId);
+        }
+    }
+    private void loadVideoFromIntent2() {
+        String labelText = jLabel1.getText();
+        int intentId = Idintentt;
 
         // Usar DataAccess para obtener el archivo de video
         String videoFilePath = dataAccess.getVideoFile(intentId);

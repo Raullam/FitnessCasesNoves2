@@ -20,7 +20,7 @@ public class Register2 extends javax.swing.JFrame {
     public Register2() {
         initComponents();
         this.setLocationRelativeTo(null);// esto es para que se centre en la pantalla
-
+        setTitle("Rgistre");
     }
 
     /**

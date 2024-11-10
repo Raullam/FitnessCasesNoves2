@@ -1,7 +1,9 @@
 package spdvi.fitnesscasesnoves.gui;
 
+import java.awt.Color;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -10,6 +12,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import spdvi.fitnesscasesnoves.dataAcces.DataAccess;
 import spdvi.fitnesscasesnoves.dto.Intents;
+import spdvi.fitnesscasesnoves.gui.tablemodels.IntentTableCellRenderer;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -30,6 +33,7 @@ public class IntentsFrame extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         insertarIntentsAlJtext();
+        setTitle("Intents");
     }
 
     /**
@@ -219,60 +223,58 @@ public class IntentsFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTable1PropertyChange
 
-    public final void insertarIntentsAlJtext() {
-        DataAccess da = new DataAccess();
-        ArrayList<Intents> intents = da.getIntents(); // Obtener la lista de intents desde la base de datos
+  public final void insertarIntentsAlJtext() {
+    DataAccess da = new DataAccess();
+    ArrayList<Intents> intents = da.getIntents();
+    Map<Integer, Integer> valoraciones = da.obtenerTodasLasValoraciones();
 
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel(); // Obtener el modelo de la tabla
-        model.setRowCount(0); // Limpiar las filas anteriores del JTable
-
-// Limpiar columnas anteriores si ya estaban creadas
-        model.setColumnCount(0);
-
-// Añadir las columnas que deseas
-        model.addColumn("ID Intent");
-        model.addColumn("ID Usuari");
-        model.addColumn("ID Exercici");
-        model.addColumn("Timestamp Inici");
-        model.addColumn("Timestamp Fi");
-        model.addColumn("Video File");
-
-// Iterar sobre cada intent y agregarlo al JTable
-        for (Intents intent : intents) {
-            // Crear un arreglo de objetos para cada fila (intent)
-            Object[] row = {
-                intent.getId(),
-                intent.getIdUsuari(),
-                intent.getIdExercici(),
-                intent.getTimestamp_Inici(),
-                intent.getTimestamp_Fi(),
-                intent.getVideofile()
-            };
-            model.addRow(row); // Agregar la fila al modelo de la tabla
+    DefaultTableModel model = new DefaultTableModel() {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false; // Hacer no editables las celdas
         }
+    };
+    
+    jTable1.setModel(model); // Establecer el modelo en la tabla
+    model.setRowCount(0);
+    model.setColumnCount(0);
 
-// Añadir ListSelectionListener para detectar la fila seleccionada
-        jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent event) {
-                if (!event.getValueIsAdjusting()) {
-                    int selectedRow = jTable1.getSelectedRow();
-                    if (selectedRow != -1) {
-                        // Obtener el ID del intent seleccionado (columna 0)
-                        Object id = jTable1.getValueAt(selectedRow, 0);
-                        System.out.println("Id del intent seleccionado: " + id);
+    model.addColumn("ID Intent");
+    model.addColumn("ID Usuari");
+    model.addColumn("ID Exercici");
+    model.addColumn("Timestamp Inici");
+    model.addColumn("Timestamp Fi");
+    model.addColumn("Video File");
 
-                        // Mostrar el ID del intent seleccionado en el JTextField
-                        jLabel1.setText("Id del intent seleccionado: " + id.toString());
-
-                        // Puedes realizar otras acciones con el ID del intent seleccionado si es necesario
-                    }
-                }
-            }
-        });
-
+    for (Intents intent : intents) {
+        Object[] row = {
+            intent.getId(),
+            intent.getIdUsuari(),
+            intent.getIdExercici(),
+            intent.getTimestamp_Inici(),
+            intent.getTimestamp_Fi(),
+            intent.getVideofile()
+        };
+        model.addRow(row);
     }
 
+    // Configurar el renderer personalizado para las filas
+    IntentTableCellRenderer renderer = new IntentTableCellRenderer(valoraciones);
+    for (int i = 0; i < jTable1.getColumnCount(); i++) {
+        jTable1.getColumnModel().getColumn(i).setCellRenderer(renderer);
+    }
+
+    // Listener para seleccionar y mostrar el ID de la fila seleccionada
+    jTable1.getSelectionModel().addListSelectionListener(event -> {
+        if (!event.getValueIsAdjusting()) {
+            int selectedRow = jTable1.getSelectedRow();
+            if (selectedRow != -1) {
+                Object id = jTable1.getValueAt(selectedRow, 0);
+                System.out.println("ID del intento seleccionado: " + id);
+            }
+        }
+    });
+}
     /**
      * @param args the command line arguments
      */

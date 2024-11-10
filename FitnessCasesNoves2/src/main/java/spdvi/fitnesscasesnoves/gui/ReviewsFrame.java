@@ -5,11 +5,13 @@
 package spdvi.fitnesscasesnoves.gui;
 
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import spdvi.fitnesscasesnoves.dataAcces.DataAccess;
 import spdvi.fitnesscasesnoves.dto.Review;
+import spdvi.fitnesscasesnoves.gui.tablemodels.ReviewTableCellRenderer;
 
 /**
  *
@@ -26,6 +28,8 @@ public class ReviewsFrame extends javax.swing.JFrame {
         initComponents();
         insertarReviewsAlJTable();
         this.setLocationRelativeTo(null); // esto es para que se centre en la pantalla
+        setTitle("Valoracions");
+
 
     }
 
@@ -129,58 +133,103 @@ public class ReviewsFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+         DataAccess da = new DataAccess();
+    
+    // Obtenim la fila seleccionada de jTable1
+    int selectedRow = jTable1.getSelectedRow();
+
+    if (selectedRow != -1) { // Comprovem que hi hagi una fila seleccionada
+        // Obtenim l'ID del review des de la primera columna
+        int idReview = Integer.parseInt(jTable1.getValueAt(selectedRow, 0).toString()); // ID del review
+        
+        // Creem el missatge de confirmació
+        String missatge = "Estàs segur que vols eliminar el review amb ID " + idReview + "?";
+
+        // Mostrem el quadre de confirmació
+        int resposta = JOptionPane.showConfirmDialog(
+                null, // Això mostrarà el JOptionPane de manera independent a qualsevol finestra específica, pots utilitzar 'this' si vols fer-ho sobre el JFrame principal
+                missatge, 
+                "Confirmar eliminació", 
+                JOptionPane.YES_NO_OPTION, 
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        // Comprovem la resposta de l'usuari
+        if (resposta == JOptionPane.YES_OPTION) {
+            // Si l'usuari confirma, eliminen el review
+            da.eliminarReviewPorId(idReview);
+
+            // Mostrem el missatge d'èxit
+            JOptionPane.showMessageDialog(null, "Review eliminat amb èxit.");
+            
+            // Aquí pots actualitzar la taula si cal
+            // insertarReviewsAlJtext(); // Tornar a carregar la taula de reviews (si és necessari)
+        } else {
+            // Si l'usuari cancela, mostrem un missatge informant que s'ha cancel·lat l'eliminació
+            JOptionPane.showMessageDialog(null, "Eliminació cancel·lada.");
+        }
+    } else {
+        // Si no hi ha fila seleccionada, mostrem un missatge informant que cal seleccionar un review per eliminar
+        JOptionPane.showMessageDialog(null, "Si us plau, selecciona un review per eliminar.");
+    }
     }//GEN-LAST:event_jButton1ActionPerformed
     public final void insertarReviewsAlJTable() {
-        DataAccess da = new DataAccess();
-        ArrayList<Review> reviews = da.getReviews(); // Obtener la lista de reviews desde la base de datos
+    DataAccess da = new DataAccess();
+    ArrayList<Review> reviews = da.getReviews(); // Obtener la lista de reviews desde la base de datos
 
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel(); // Suponiendo que el JTable para reviews se llama jTable2
-        model.setRowCount(0); // Limpiar las filas anteriores del JTable
+    DefaultTableModel model = (DefaultTableModel) jTable1.getModel(); // Suponiendo que el JTable para reviews se llama jTable1
+    model.setRowCount(0); // Limpiar las filas anteriores del JTable
 
-        // Limpiar columnas anteriores si ya estaban creadas
-        model.setColumnCount(0);
+    // Limpiar columnas anteriores si ya estaban creadas
+    model.setColumnCount(0);
 
-        // Añadir las columnas que deseas
-        model.addColumn("ID Review");
-        model.addColumn("ID Intent");
-        model.addColumn("ID Reviewer");
-        model.addColumn("Valoración");
-        model.addColumn("Comentario");
+    // Añadir las columnas que deseas
+    model.addColumn("ID Review");
+    model.addColumn("ID Intent");
+    model.addColumn("ID Reviewer");
+    model.addColumn("Valoración");
+    model.addColumn("Comentario");
 
-        // Iterar sobre cada review y agregarlo al JTable
-        for (Review review : reviews) {
-            // Crear un arreglo de objetos para cada fila (review)
-            Object[] row = {
-                review.getId(), // ID Review
-                review.getIdIntent(), // ID Intent asociado
-                review.getIdReviewer(), // ID del revisor
-                review.getValoracion(), // Valoración
-                review.getComentario() // Comentario
-            };
-            model.addRow(row); // Agregar la fila al modelo de la tabla
-        }
+    // Iterar sobre cada review y agregarlo al JTable
+    for (Review review : reviews) {
+        // Crear un arreglo de objetos para cada fila (review)
+        Object[] row = {
+            review.getId(), // ID Review
+            review.getIdIntent(), // ID Intent asociado
+            review.getIdReviewer(), // ID del revisor
+            review.getValoracion(), // Valoración
+            review.getComentario() // Comentario
+        };
+        model.addRow(row); // Agregar la fila al modelo de la tabla
+    }
 
-        // Añadir ListSelectionListener para detectar la fila seleccionada
-        jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent event) {
-                if (!event.getValueIsAdjusting()) {
-                    int selectedRow = jTable1.getSelectedRow();
-                    if (selectedRow != -1) {
-                        // Obtener el ID del review seleccionado (columna 0)
-                        Object id = jTable1.getValueAt(selectedRow, 0);
-                        System.out.println("Id del review seleccionado: " + id);
+    // Configurar el renderer personalizado para las filas
+    ReviewTableCellRenderer renderer = new ReviewTableCellRenderer();
+    for (int i = 0; i < jTable1.getColumnCount(); i++) {
+        jTable1.getColumnModel().getColumn(i).setCellRenderer(renderer);
+    }
 
-                        // Mostrar el ID del review seleccionado en el JLabel o JTextField
-                        jLabel1.setText("Id del review seleccionado: " + id.toString());
+    // Añadir ListSelectionListener para detectar la fila seleccionada
+    jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        @Override
+        public void valueChanged(ListSelectionEvent event) {
+            if (!event.getValueIsAdjusting()) {
+                int selectedRow = jTable1.getSelectedRow();
+                if (selectedRow != -1) {
+                    // Obtener el ID del review seleccionado (columna 0)
+                    Object id = jTable1.getValueAt(selectedRow, 0);
+                    System.out.println("Id del review seleccionado: " + id);
 
-                        // Puedes realizar otras acciones con el ID del review seleccionado si es necesario
-                    }
+                    // Mostrar el ID del review seleccionado en el JLabel o JTextField
+                    jLabel1.setText("Id del review seleccionado: " + id.toString());
+
+                    // Puedes realizar otras acciones con el ID del review seleccionado si es necesario
                 }
             }
-        });
-    }
+        }
+    });
+}
+
 
     /**
      * @param args the command line arguments

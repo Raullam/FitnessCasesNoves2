@@ -15,7 +15,9 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
@@ -29,8 +31,8 @@ import spdvi.fitnesscasesnoves.dto.Review;
  */
 // DAO Data access object
 public class DataAccess {
-        public static int idInstructor = -1; // Valor por defecto si el usuario no se encuentra
 
+    public static int idInstructor = -1; // Valor por defecto si el usuario no se encuentra
 
     public Connection getConnection() {
         Connection connection = null;
@@ -263,32 +265,6 @@ public class DataAccess {
         return descripciones;
     }
 
-    public boolean updateUsuaris(Usuari user) {
-        String sql = "UPDATE usuaris SET Nom = ?, Email = ?, PasswordHash = ?, Foto = ?, IsInstructor = ? WHERE Id = ?";
-        boolean updated = false; // Variable para controlar si se actualizó
-
-        try (Connection connection = getConnection(); PreparedStatement updateStatement = connection.prepareStatement(sql)) {
-
-            // Asignar valores a los parámetros del PreparedStatement
-            updateStatement.setString(1, user.getNom());
-            updateStatement.setString(2, user.getEmail());
-            updateStatement.setString(3, user.getPasswordHash());
-            updateStatement.setBytes(4, user.getFoto());
-            updateStatement.setBoolean(5, user.isInstructor()); // Usar el nuevo método isInstructor
-            updateStatement.setInt(6, user.getId());
-
-            // Ejecutar la actualización
-            int rowsAffected = updateStatement.executeUpdate();
-            if (rowsAffected > 0) {
-                updated = true; // La actualización fue exitosa
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return updated; // Retornar el estado de la actualización
-    }
-
     public String getNombreById(int id) {
         String nombreUsuario = null; // Inicializa la variable para el nombre de usuario
         String sql = "SELECT Nom FROM usuaris WHERE Id = ?"; // Consulta para obtener el nombre por ID
@@ -313,6 +289,190 @@ public class DataAccess {
         return nombreUsuario; // Devuelve el nombre del usuario o null si no existe
     }
 
+    public int getLastIdExercicis() {
+        int lastId = 0; // Inicializa el ID a 0 (o a otro valor que consideres adecuado)
+
+        // Define la consulta SQL para obtener el máximo ID
+        String sql = "SELECT MAX(id) AS maxId FROM Exercicis"; // Ajusta el nombre del campo si es necesario
+
+        // Manejo de la conexión y los recursos
+        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            // Verifica si hay un resultado
+            if (resultSet.next()) {
+                lastId = resultSet.getInt("maxId"); // Obtiene el máximo ID
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Usuari.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return lastId; // Retorna el último ID encontrado
+    }
+
+    public int getLastId() {
+        int lastId = 0; // Inicializa el ID a 0 (o a otro valor que consideres adecuado)
+
+        // Define la consulta SQL para obtener el máximo ID
+        String sql = "SELECT MAX(id) AS maxId FROM Usuaris"; // Ajusta el nombre del campo si es necesario
+
+        // Manejo de la conexión y los recursos
+        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            // Verifica si hay un resultado
+            if (resultSet.next()) {
+                lastId = resultSet.getInt("maxId"); // Obtiene el máximo ID
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Usuari.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return lastId; // Retorna el último ID encontrado
+    }
+
+    // Método para obtener todas las reseñas desde la base de datos
+    public ArrayList<Review> getReviews() {
+        ArrayList<Review> reviews = new ArrayList<>();
+        String query = "SELECT [Id], [IdIntent], [IdReviewer], [Valoracio], [Comentari] FROM [simulapdb].[dbo].[Review]";
+
+        try (Connection conn = getConnection(); Statement statement = conn.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
+
+            while (resultSet.next()) {
+                // Crear un objeto Review a partir de los datos de la fila
+                int id = resultSet.getInt("Id");
+                int idIntent = resultSet.getInt("IdIntent");
+                int idReviewer = resultSet.getInt("IdReviewer");
+                int valoracion = resultSet.getInt("Valoracio");
+                String comentario = resultSet.getString("Comentari");
+
+                Review review = new Review(id, idIntent, idReviewer, valoracion, comentario);
+                reviews.add(review); // Añadir la reseña a la lista
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return reviews; // Devolver la lista de reseñas
+    }
+
+    // Método para obtener la lista de ejercicios
+    public ArrayList<Exercici> getExercicis() {
+        ArrayList<Exercici> exercicis = new ArrayList<>();
+
+        String query = "SELECT Id, NomExercici AS Nom, Descripcio FROM Exercicis";
+
+        try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
+
+            while (rs.next()) {
+                // Crear un objeto Exercici con solo Id, Nombre y Descripción
+                Exercici exercici = new Exercici(
+                        rs.getInt("Id"), // Id del ejercicio
+                        rs.getString("Nom"), // Nombre del ejercicio
+                        rs.getString("Descripcio") // Descripción del ejercicio
+                );
+
+                // Agregar el objeto Exercici a la lista
+                exercicis.add(exercici);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return exercicis;
+    }
+
+    public String getVideoFile(int intentId) {
+        String videoFilePath = null;
+        String query = "SELECT Videofile FROM Intents WHERE Id = ?";
+
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, intentId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                videoFilePath = rs.getString("Videofile");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return videoFilePath;
+    }
+    
+       // Método para verificar si un intento tiene una valoración
+    public Integer mirarSiTeReview(int intentId) {
+        Integer review = null;  // Valor de retorno, null si no se encuentra valoración
+
+        String query = "SELECT valoracio FROM Review WHERE IdIntent = ?";
+
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, intentId);  // Establecer el ID del intento como parámetro
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    review = rs.getInt("Valoracio");  // Obtener la valoración del intento
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return review;  // Retornar el valor de la valoración o null si no se encuentra
+    }
+
+    public Map<Integer, Integer> obtenerTodasLasValoraciones() {
+        Map<Integer, Integer> valoraciones = new HashMap<>();
+
+        String query = "SELECT IdIntent, valoracio FROM Review"; // Asegúrate de que estos nombres son correctos
+
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int idIntento = rs.getInt("IdIntent"); // Usa el mismo nombre de columna exacto de la BD
+                int valoracion = rs.getInt("valoracio"); // Nombre de columna exacto
+                valoraciones.put(idIntento, valoracion);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return valoraciones;
+    }
+    
+    // Método para obtener el ID del usuario basado en su nombre de usuario y contraseña
+
+    public int obtenerIdUsuario(String username, String password) {
+        String query = "SELECT Id, PasswordHash FROM Usuaris WHERE nom = ?"; // Obtén el hash también
+
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                // Obtenemos el hash de la base de datos
+                String storedHash = rs.getString("PasswordHash");
+                // Verificamos la contraseña proporcionada
+                if (BCrypt.verifyer().verify(password.toCharArray(), storedHash.toCharArray()).verified) {
+                    idInstructor = rs.getInt("Id"); // Obtiene el ID del usuario si la contraseña es válida
+                } else {
+                    System.out.println("Contraseña incorrecta.");
+                }
+            } else {
+                System.out.println("No se encontró el usuario.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return idInstructor; // Retorna el ID del usuario o -1 si no se encontró
+    }
+
+
+
     public int registerUser(Usuari u) {
         Connection connection = getConnection();
         String sql = "INSERT INTO Usuaris(Nom, Email, PasswordHash, IsInstructor) "
@@ -336,48 +496,28 @@ public class DataAccess {
 
         return 0;
     }
+    
+        public boolean createReview(int idIntent, int idReviewer, int valoracio, String comentari) {
+        String query = "INSERT INTO Review (IdIntent, IdReviewer, Valoracio, Comentari) VALUES (?, ?, ?, ?)";
 
-    public int getLastId() {
-        int lastId = 0; // Inicializa el ID a 0 (o a otro valor que consideres adecuado)
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
 
-        // Define la consulta SQL para obtener el máximo ID
-        String sql = "SELECT MAX(id) AS maxId FROM Usuaris"; // Ajusta el nombre del campo si es necesario
+            stmt.setInt(1, idIntent);
+            stmt.setInt(2, idReviewer);
+            stmt.setInt(3, valoracio);
+            stmt.setString(4, comentari);
 
-        // Manejo de la conexión y los recursos
-        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0; // Devuelve true si se insertó correctamente
 
-            // Verifica si hay un resultado
-            if (resultSet.next()) {
-                lastId = resultSet.getInt("maxId"); // Obtiene el máximo ID
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Usuari.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
-
-        return lastId; // Retorna el último ID encontrado
     }
 
-    public int getLastIdExercicis() {
-        int lastId = 0; // Inicializa el ID a 0 (o a otro valor que consideres adecuado)
 
-        // Define la consulta SQL para obtener el máximo ID
-        String sql = "SELECT MAX(id) AS maxId FROM Exercicis"; // Ajusta el nombre del campo si es necesario
-
-        // Manejo de la conexión y los recursos
-        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
-
-            // Verifica si hay un resultado
-            if (resultSet.next()) {
-                lastId = resultSet.getInt("maxId"); // Obtiene el máximo ID
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Usuari.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return lastId; // Retorna el último ID encontrado
-    }
 // Afegir exercici i intent per poder asignar un exercici a un usuari
-
     public int crearExerciciEnBD(int usuarioId, String nombreExercici, String descripcionExercici) {
         String sql = "INSERT INTO Exercicis (NomExercici, Descripcio) VALUES (?, ?)";
         String sqlInsertIntent = "INSERT INTO Intents (idUsuari, IdExercici, Timestamp_Inici, Timestamp_Fi, Videofile) VALUES (?, ?, ?, ?, ?)";
@@ -484,6 +624,30 @@ public class DataAccess {
         }
     }
 
+    // Método para eliminar una review por su ID
+    public void eliminarReviewPorId(int idReview) {
+        String sql = "DELETE FROM reviews WHERE id = ?"; // Asume que 'reviews' es la tabla donde almacenas las reviews y 'id' es la columna con el ID de la review
+
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            // Establecer el valor del parámetro en la consulta
+            stmt.setInt(1, idReview);
+
+            // Ejecutar la consulta de eliminación
+            int filasAfectadas = stmt.executeUpdate();
+
+            // Verificar si se eliminó alguna fila
+            if (filasAfectadas > 0) {
+                System.out.println("Review eliminada con éxito.");
+            } else {
+                System.out.println("No se encontró ninguna review con ese ID.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar la review: " + e.getMessage());
+        }
+    }
+
     // En la clase DataAccess
     public void actualizarIntent(Intents intent) {
         // Ejemplo de código SQL para actualizar en la base de datos
@@ -504,125 +668,58 @@ public class DataAccess {
         }
     }
 
-// Método para obtener todas las reseñas desde la base de datos
-    public ArrayList<Review> getReviews() {
-        ArrayList<Review> reviews = new ArrayList<>();
-        String query = "SELECT [Id], [IdIntent], [IdReviewer], [Valoracio], [Comentari] FROM [simulapdb].[dbo].[Review]";
 
-        try (Connection conn = getConnection(); Statement statement = conn.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
 
-            while (resultSet.next()) {
-                // Crear un objeto Review a partir de los datos de la fila
-                int id = resultSet.getInt("Id");
-                int idIntent = resultSet.getInt("IdIntent");
-                int idReviewer = resultSet.getInt("IdReviewer");
-                int valoracion = resultSet.getInt("Valoracio");
-                String comentario = resultSet.getString("Comentari");
+    public void actualizarUsuario(int usuarioId, String nuevoNombre, String nuevoEmail, String nuevoPasswordHash) {
+        String sql = "UPDATE Usuaris SET Nom = ?, Email = ?, PasswordHash = ? WHERE Id = ?";
 
-                Review review = new Review(id, idIntent, idReviewer, valoracion, comentario);
-                reviews.add(review); // Añadir la reseña a la lista
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-        return reviews; // Devolver la lista de reseñas
-    }
-    // Método para obtener la lista de ejercicios
+            // Asignar los parámetros al PreparedStatement
+            ps.setString(1, nuevoNombre);
+            ps.setString(2, nuevoEmail);
+            ps.setString(3, nuevoPasswordHash);
+            ps.setInt(4, usuarioId);
 
-    public ArrayList<Exercici> getExercicis() {
-        ArrayList<Exercici> exercicis = new ArrayList<>();
+            // Ejecutar la actualización
+            int rowsUpdated = ps.executeUpdate();
 
-        String query = "SELECT Id, NomExercici AS Nom, Descripcio FROM Exercicis";
-
-        try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
-
-            while (rs.next()) {
-                // Crear un objeto Exercici con solo Id, Nombre y Descripción
-                Exercici exercici = new Exercici(
-                        rs.getInt("Id"), // Id del ejercicio
-                        rs.getString("Nom"), // Nombre del ejercicio
-                        rs.getString("Descripcio") // Descripción del ejercicio
-                );
-
-                // Agregar el objeto Exercici a la lista
-                exercicis.add(exercici);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return exercicis;
-    }
-
-    public String getVideoFile(int intentId) {
-        String videoFilePath = null;
-        String query = "SELECT Videofile FROM Intents WHERE Id = ?";
-
-        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setInt(1, intentId);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                videoFilePath = rs.getString("Videofile");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return videoFilePath;
-    }
-
-    public boolean createReview(int idIntent, int idReviewer, int valoracio, String comentari) {
-        String query = "INSERT INTO Review (IdIntent, IdReviewer, Valoracio, Comentari) VALUES (?, ?, ?, ?)";
-
-        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setInt(1, idIntent);
-            stmt.setInt(2, idReviewer);
-            stmt.setInt(3, valoracio);
-            stmt.setString(4, comentari);
-
-            int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0; // Devuelve true si se insertó correctamente
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-// Método para obtener el ID del usuario basado en su nombre de usuario y contraseña
-
- public int obtenerIdUsuario(String username, String password) {
-    String query = "SELECT Id, PasswordHash FROM Usuaris WHERE nom = ?"; // Obtén el hash también
-
-    try (Connection conn = getConnection(); 
-         PreparedStatement stmt = conn.prepareStatement(query)) {
-        stmt.setString(1, username);
-        ResultSet rs = stmt.executeQuery();
-
-        if (rs.next()) {
-            // Obtenemos el hash de la base de datos
-            String storedHash = rs.getString("PasswordHash");
-            // Verificamos la contraseña proporcionada
-            if (BCrypt.verifyer().verify(password.toCharArray(), storedHash.toCharArray()).verified) {
-                idInstructor = rs.getInt("Id"); // Obtiene el ID del usuario si la contraseña es válida
+            if (rowsUpdated > 0) {
+                System.out.println("Usuario actualizado con éxito.");
             } else {
-                System.out.println("Contraseña incorrecta.");
+                System.out.println("No se encontró el usuario con ID " + usuarioId);
             }
-        } else {
-            System.out.println("No se encontró el usuario.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al actualizar el usuario.");
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
     }
-    return idInstructor; // Retorna el ID del usuario o -1 si no se encontró
-}
+    
+        public boolean updateUsuaris(Usuari user) {
+        String sql = "UPDATE usuaris SET Nom = ?, Email = ?, PasswordHash = ?, Foto = ?, IsInstructor = ? WHERE Id = ?";
+        boolean updated = false; // Variable para controlar si se actualizó
 
+        try (Connection connection = getConnection(); PreparedStatement updateStatement = connection.prepareStatement(sql)) {
 
+            // Asignar valores a los parámetros del PreparedStatement
+            updateStatement.setString(1, user.getNom());
+            updateStatement.setString(2, user.getEmail());
+            updateStatement.setString(3, user.getPasswordHash());
+            updateStatement.setBytes(4, user.getFoto());
+            updateStatement.setBoolean(5, user.isInstructor()); // Usar el nuevo método isInstructor
+            updateStatement.setInt(6, user.getId());
+
+            // Ejecutar la actualización
+            int rowsAffected = updateStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                updated = true; // La actualización fue exitosa
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return updated; // Retornar el estado de la actualización
+    }
 
 }
 
