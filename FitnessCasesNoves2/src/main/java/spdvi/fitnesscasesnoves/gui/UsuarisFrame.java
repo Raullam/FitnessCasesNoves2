@@ -4,6 +4,9 @@
  */
 package spdvi.fitnesscasesnoves.gui;
 
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import spdvi.fitnesscasesnoves.logica.LogicaPaginaPrincipal;
 import spdvi.fitnesscasesnoves.logica.UsuarisLogica;
 
@@ -147,22 +150,34 @@ public class UsuarisFrame extends javax.swing.JFrame {
 
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
 // Obtenim el text complet de jLabel3IdUsuariSelecionat
-        
-        int selectedRow = jTable2.getSelectedRow(); // Obtenir la fila seleccionada de jTable2
+
+        int selectedRow = jTable2.getSelectedRow(); // Obtenir la fila seleccionada de jTable1
 
         if (selectedRow != -1) { // Comprova que hi hagi files seleccionades a ambdues taules
             // Obtenir els valors de la fila seleccionada de jTable2
-        int idIntent = Integer.parseInt(jTable2.getValueAt(selectedRow, 0).toString()); // ID del intent
-           
+            int idIntent = Integer.parseInt(jTable2.getValueAt(selectedRow, 0).toString()); // ID del intent
 
             // Crear i inicialitzar el frame ReviewVideoFrame amb les dades de l'intent
-            ReviewVideoFrame reviewFrame = new ReviewVideoFrame(idIntent);
+            ReviewVideoFrame2 reviewFrame = new ReviewVideoFrame2(idIntent);
+            reviewFrame.setIdIntentLabel(idIntent);
             reviewFrame.setVisible(true); // Mostrar el frame
-                                   
+            reviewFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            // Obtener la ventana principal y deshabilitarla
+            JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(jTable1);
+            mainFrame.setEnabled(false);
+
+            // Agregar un WindowListener para reactivar la ventana principal cuando se cierre el frame secundario
+            reviewFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent e) {
+                    mainFrame.setEnabled(true);
+                    mainFrame.toFront(); // Llevar la ventana principal al frente
+                }
+            });
 
         } else {
             System.out.println("Selecciona una fila a ambdues taules abans de continuar.");
-        }
+        } 
     }//GEN-LAST:event_jTable2MouseClicked
 
     /**

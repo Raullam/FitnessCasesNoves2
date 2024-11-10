@@ -9,60 +9,64 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import spdvi.fitnesscasesnoves.dto.Usuari;
 
-/**
- *
- * @author Raül Lama
- */
 public class LoginDataAccess {
+    private Properties config;
 
+    // Constructor que carrega les configuracions al crear la classe
+    public LoginDataAccess() {
+        config = new CarregaConfiguracio().carregarConfig("database.conf");
+    }
+
+    // Mètode per obtenir la connexió usant les dades del fitxer de configuració
     public Connection getConnection() {
         Connection connection = null;
-        String connectionString = "jdbc:sqlserver://localhost;database=simulapdb;trustServerCertificate=true;user=sa;password=1234;";
 
-        //despues de hacer focus que se haga el update
+        // Llegir les propietats des de config
+        String host = config.getProperty("host", "localhost");
+        String databaseName = config.getProperty("database_name", "simulapdb");
+        String user = config.getProperty("user", "sa");
+        String password = config.getProperty("password", "1234");
+
+        // Crear el string de connexió amb els valors del fitxer .conf
+        String connectionString = String.format(
+            "jdbc:sqlserver://%s;database=%s;trustServerCertificate=true;user=%s;password=%s;",
+            host, databaseName, user, password
+        );
+
         try {
             connection = DriverManager.getConnection(connectionString);
         } catch (SQLException ex) {
-            Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginDataAccess.class.getName()).log(Level.SEVERE, "La connexió ha fallat", ex);
         }
         return connection;
     }
 
+    // Mètode per obtenir un usuari pel seu nom d'usuari
     public Usuari getUsuarioByUsername(String username) {
         Usuari user = null;
-        String sql = "SELECT * FROM usuaris WHERE Nom = ?"; // Query para buscar el usuario por nombre
+        String sql = "SELECT * FROM usuaris WHERE Nom = ?";
 
         try (Connection connection = getConnection(); PreparedStatement selectStatement = connection.prepareStatement(sql)) {
-
-            // Establecer el parámetro en la consulta
             selectStatement.setString(1, username);
-
-            // Ejecutar la consulta
             ResultSet resultSet = selectStatement.executeQuery();
 
-            // Si el usuario existe, obtener los datos y crear un objeto Usuari
             if (resultSet.next()) {
                 user = new Usuari(
                         resultSet.getInt("Id"),
                         resultSet.getString("Nom"),
                         resultSet.getString("Email"),
                         resultSet.getString("PasswordHash"),
-                        //resultSet.getBytes("Foto"),
                         resultSet.getBoolean("IsInstructor")
                 );
             }
-
         } catch (SQLException ex) {
-            Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.print("Alguna cosa no ha anat be a LoginDataAcces");
+            Logger.getLogger(LoginDataAccess.class.getName()).log(Level.SEVERE, "Execució de la consulta fallida", ex);
         }
-
-        // Retornar el objeto Usuari si se encontró, o null si no
         return user;
     }
-
 }

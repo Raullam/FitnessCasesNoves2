@@ -11,18 +11,25 @@ import spdvi.fitnesscasesnoves.dataAcces.DataAccess;
  *
  * @author Rulox
  */
-public class CrearExercici extends javax.swing.JFrame {
+public class CrearExercici2 extends javax.swing.JFrame {
 
     static int usuariIdd;
+    private ExercicisFrame exercicisFrame;
 
     /**
      * Creates new form CrearExercici
      */
-    public CrearExercici() {
+    public CrearExercici2() {
         initComponents();
         this.setLocationRelativeTo(null); // esto es para que se centre en la pantalla
-        setTitle("CREA UN EXERCICI I INTENT ");
+        setTitle("CREA UN EXERCICI");
+    }
 
+    CrearExercici2(ExercicisFrame aThis) {
+        initComponents();
+        this.setLocationRelativeTo(null); // esto es para que se centre en la pantalla
+        this.exercicisFrame = aThis;
+        setTitle("CREA UN EXERCICI");
     }
 
     /**
@@ -126,12 +133,14 @@ public class CrearExercici extends javax.swing.JFrame {
         }
 
         DataAccess dataAccess = new DataAccess();
-        int idExercici = dataAccess.crearExerciciEnBD(usuariIdd, nombreExercici, descripcionExercici);
+        int idExercici = dataAccess.crearExerciciEnBD(nombreExercici, descripcionExercici);
 
         // Verificar si la inserció ha estat exitosa
         if (idExercici != -1) {
             JOptionPane.showMessageDialog(this, "Ejercicio creado exitosamente con ID: " + idExercici);
-            // aqui tengo que seguir trabajando hacer un set visible false etc..
+            exercicisFrame.insertarExercicisAlJTable();
+            dispose();
+
         } else {
             JOptionPane.showMessageDialog(this, "Error al crear el ejercicio.");
     }    }//GEN-LAST:event_jButton1ActionPerformed
@@ -143,7 +152,7 @@ public class CrearExercici extends javax.swing.JFrame {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CrearExercici().setVisible(true);
+                new CrearExercici2().setVisible(true);
             }
         });
     }

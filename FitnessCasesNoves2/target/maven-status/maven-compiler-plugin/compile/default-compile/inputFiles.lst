@@ -1,7 +1,10 @@
 C:\Users\Rulox\Documents\NetBeansProjects\FitnessCasesNoves2\FitnessCasesNoves2\src\main\java\spdvi\fitnesscasesnoves\logica\logicaNegoci.java
 C:\Users\Rulox\Documents\NetBeansProjects\FitnessCasesNoves2\FitnessCasesNoves2\src\main\java\spdvi\fitnesscasesnoves\logica\UsuarisLogica.java
+C:\Users\Rulox\Documents\NetBeansProjects\FitnessCasesNoves2\FitnessCasesNoves2\src\main\java\spdvi\fitnesscasesnoves\gui\QuiSomFrame.java
 C:\Users\Rulox\Documents\NetBeansProjects\FitnessCasesNoves2\FitnessCasesNoves2\src\main\java\spdvi\fitnesscasesnoves\dataAcces\LoginDataAccess.java
+C:\Users\Rulox\Documents\NetBeansProjects\FitnessCasesNoves2\FitnessCasesNoves2\src\main\java\spdvi\fitnesscasesnoves\gui\ReviewVideoFrame2.java
 C:\Users\Rulox\Documents\NetBeansProjects\FitnessCasesNoves2\FitnessCasesNoves2\src\main\java\spdvi\fitnesscasesnoves\gui\IntentsFrame.java
+C:\Users\Rulox\Documents\NetBeansProjects\FitnessCasesNoves2\FitnessCasesNoves2\src\main\java\spdvi\fitnesscasesnoves\dataAcces\CarregaConfiguracio.java
 C:\Users\Rulox\Documents\NetBeansProjects\FitnessCasesNoves2\FitnessCasesNoves2\src\main\java\spdvi\fitnesscasesnoves\gui\UsuarisFrame.java
 C:\Users\Rulox\Documents\NetBeansProjects\FitnessCasesNoves2\FitnessCasesNoves2\src\main\java\spdvi\fitnesscasesnoves\gui\Register2.java
 C:\Users\Rulox\Documents\NetBeansProjects\FitnessCasesNoves2\FitnessCasesNoves2\src\main\java\spdvi\fitnesscasesnoves\dto\Review.java
@@ -18,6 +21,8 @@ C:\Users\Rulox\Documents\NetBeansProjects\FitnessCasesNoves2\FitnessCasesNoves2\
 C:\Users\Rulox\Documents\NetBeansProjects\FitnessCasesNoves2\FitnessCasesNoves2\src\main\java\spdvi\fitnesscasesnoves\gui\PaginaPrincipal.java
 C:\Users\Rulox\Documents\NetBeansProjects\FitnessCasesNoves2\FitnessCasesNoves2\src\main\java\spdvi\fitnesscasesnoves\gui\tablemodels\IntentTableCellRenderer.java
 C:\Users\Rulox\Documents\NetBeansProjects\FitnessCasesNoves2\FitnessCasesNoves2\src\main\java\spdvi\fitnesscasesnoves\gui\tablemodels\ReviewTableCellRenderer.java
+C:\Users\Rulox\Documents\NetBeansProjects\FitnessCasesNoves2\FitnessCasesNoves2\src\main\java\spdvi\fitnesscasesnoves\dataAcces\DataAcces2.java
+C:\Users\Rulox\Documents\NetBeansProjects\FitnessCasesNoves2\FitnessCasesNoves2\src\main\java\spdvi\fitnesscasesnoves\gui\CrearExercici2.java
 C:\Users\Rulox\Documents\NetBeansProjects\FitnessCasesNoves2\FitnessCasesNoves2\src\main\java\spdvi\fitnesscasesnoves\gui\ExercicisFrame.java
 C:\Users\Rulox\Documents\NetBeansProjects\FitnessCasesNoves2\FitnessCasesNoves2\src\main\java\spdvi\fitnesscasesnoves\gui\ReviewsFrame.java
 C:\Users\Rulox\Documents\NetBeansProjects\FitnessCasesNoves2\FitnessCasesNoves2\src\main\java\spdvi\fitnesscasesnoves\logica\LogicaPaginaPrincipal.java

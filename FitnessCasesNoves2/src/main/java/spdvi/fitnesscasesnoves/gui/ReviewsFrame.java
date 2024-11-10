@@ -5,7 +5,9 @@
 package spdvi.fitnesscasesnoves.gui;
 
 import java.util.ArrayList;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -23,13 +25,12 @@ public class ReviewsFrame extends javax.swing.JFrame {
      * Creates new form ReviewsFrame
      */
     public ReviewsFrame() {
-        
+
         // TERMINAR LOS 2 BOTONES
         initComponents();
         insertarReviewsAlJTable();
         this.setLocationRelativeTo(null); // esto es para que se centre en la pantalla
         setTitle("Valoracions");
-
 
     }
 
@@ -45,9 +46,10 @@ public class ReviewsFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -63,6 +65,11 @@ public class ReviewsFrame extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jButton1.setText("Borrar");
@@ -71,8 +78,6 @@ public class ReviewsFrame extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-
-        jButton2.setText("Editar");
 
         jButton3.setText("Tornar enrrera");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -83,6 +88,10 @@ public class ReviewsFrame extends javax.swing.JFrame {
 
         jLabel1.setText("Id del review seleccionado: ");
 
+        jLabel2.setText("Pitja sobre la fila que vulguis editar");
+
+        jLabel3.setText("Borrar la review : ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -92,26 +101,35 @@ public class ReviewsFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
-                                .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGap(29, 29, 29))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(29, 29, 29))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(16, 16, 16))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(52, 52, 52)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(59, 59, 59)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -133,103 +151,136 @@ public class ReviewsFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-         DataAccess da = new DataAccess();
-    
-    // Obtenim la fila seleccionada de jTable1
-    int selectedRow = jTable1.getSelectedRow();
+        DataAccess da = new DataAccess();
 
-    if (selectedRow != -1) { // Comprovem que hi hagi una fila seleccionada
-        // Obtenim l'ID del review des de la primera columna
-        int idReview = Integer.parseInt(jTable1.getValueAt(selectedRow, 0).toString()); // ID del review
-        
-        // Creem el missatge de confirmació
-        String missatge = "Estàs segur que vols eliminar el review amb ID " + idReview + "?";
+        // Obtenim la fila seleccionada de jTable1
+        int selectedRow = jTable1.getSelectedRow();
 
-        // Mostrem el quadre de confirmació
-        int resposta = JOptionPane.showConfirmDialog(
-                null, // Això mostrarà el JOptionPane de manera independent a qualsevol finestra específica, pots utilitzar 'this' si vols fer-ho sobre el JFrame principal
-                missatge, 
-                "Confirmar eliminació", 
-                JOptionPane.YES_NO_OPTION, 
-                JOptionPane.QUESTION_MESSAGE
-        );
+        if (selectedRow != -1) { // Comprovem que hi hagi una fila seleccionada
+            // Obtenim l'ID del review des de la primera columna
+            int idReview = Integer.parseInt(jTable1.getValueAt(selectedRow, 0).toString()); // ID del review
 
-        // Comprovem la resposta de l'usuari
-        if (resposta == JOptionPane.YES_OPTION) {
-            // Si l'usuari confirma, eliminen el review
-            da.eliminarReviewPorId(idReview);
+            // Creem el missatge de confirmació
+            String missatge = "Estàs segur que vols eliminar el review amb ID " + idReview + "?";
 
-            // Mostrem el missatge d'èxit
-            JOptionPane.showMessageDialog(null, "Review eliminat amb èxit.");
-            
-            // Aquí pots actualitzar la taula si cal
-            // insertarReviewsAlJtext(); // Tornar a carregar la taula de reviews (si és necessari)
+            // Mostrem el quadre de confirmació
+            int resposta = JOptionPane.showConfirmDialog(
+                    null, // Això mostrarà el JOptionPane de manera independent a qualsevol finestra específica, pots utilitzar 'this' si vols fer-ho sobre el JFrame principal
+                    missatge,
+                    "Confirmar eliminació",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+            );
+
+            // Comprovem la resposta de l'usuari
+            if (resposta == JOptionPane.YES_OPTION) {
+                // Si l'usuari confirma, eliminen el review
+                da.eliminarReviewPorId(idReview);
+
+                // Mostrem el missatge d'èxit
+                JOptionPane.showMessageDialog(null, "Review eliminat amb èxit.");
+                insertarReviewsAlJTable(); // Tornar a carregar la taula de reviews
+
+                // Aquí pots actualitzar la taula si cal
+                // insertarReviewsAlJtext(); // Tornar a carregar la taula de reviews (si és necessari)
+            } else {
+                // Si l'usuari cancela, mostrem un missatge informant que s'ha cancel·lat l'eliminació
+                JOptionPane.showMessageDialog(null, "Eliminació cancel·lada.");
+            }
         } else {
-            // Si l'usuari cancela, mostrem un missatge informant que s'ha cancel·lat l'eliminació
-            JOptionPane.showMessageDialog(null, "Eliminació cancel·lada.");
+            // Si no hi ha fila seleccionada, mostrem un missatge informant que cal seleccionar un review per eliminar
+            JOptionPane.showMessageDialog(null, "Si us plau, selecciona un review per eliminar.");
         }
-    } else {
-        // Si no hi ha fila seleccionada, mostrem un missatge informant que cal seleccionar un review per eliminar
-        JOptionPane.showMessageDialog(null, "Si us plau, selecciona un review per eliminar.");
-    }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+// Obtenim el text complet de jLabel3IdUsuariSelecionat
+
+        int selectedRow = jTable1.getSelectedRow(); // Obtenir la fila seleccionada de jTable1
+
+        if (selectedRow != -1) { // Comprova que hi hagi files seleccionades a ambdues taules
+            // Obtenir els valors de la fila seleccionada de jTable2
+            int idIntent = Integer.parseInt(jTable1.getValueAt(selectedRow, 1).toString()); // ID del intent
+
+            // Crear i inicialitzar el frame ReviewVideoFrame amb les dades de l'intent
+            ReviewVideoFrame2 reviewFrame = new ReviewVideoFrame2(idIntent);
+            reviewFrame.setIdIntentLabel(idIntent);
+            reviewFrame.setVisible(true); // Mostrar el frame
+            reviewFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            // Obtener la ventana principal y deshabilitarla
+            JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(jTable1);
+            mainFrame.setEnabled(false);
+
+            // Agregar un WindowListener para reactivar la ventana principal cuando se cierre el frame secundario
+            reviewFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent e) {
+                    mainFrame.setEnabled(true);
+                    mainFrame.toFront(); // Llevar la ventana principal al frente
+                }
+            });
+
+        } else {
+            System.out.println("Selecciona una fila a ambdues taules abans de continuar.");
+        }    }//GEN-LAST:event_jTable1MouseClicked
     public final void insertarReviewsAlJTable() {
-    DataAccess da = new DataAccess();
-    ArrayList<Review> reviews = da.getReviews(); // Obtener la lista de reviews desde la base de datos
+        DataAccess da = new DataAccess();
+        ArrayList<Review> reviews = da.getReviews(); // Obtener la lista de reviews desde la base de datos
 
-    DefaultTableModel model = (DefaultTableModel) jTable1.getModel(); // Suponiendo que el JTable para reviews se llama jTable1
-    model.setRowCount(0); // Limpiar las filas anteriores del JTable
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel(); // Suponiendo que el JTable para reviews se llama jTable1
+        // Hacer la tabla no editable
+        jTable1.setDefaultEditor(Object.class, null);
+        model.setRowCount(0); // Limpiar las filas anteriores del JTable
 
-    // Limpiar columnas anteriores si ya estaban creadas
-    model.setColumnCount(0);
+        // Limpiar columnas anteriores si ya estaban creadas
+        model.setColumnCount(0);
 
-    // Añadir las columnas que deseas
-    model.addColumn("ID Review");
-    model.addColumn("ID Intent");
-    model.addColumn("ID Reviewer");
-    model.addColumn("Valoración");
-    model.addColumn("Comentario");
+        // Añadir las columnas que deseas
+        model.addColumn("ID Review");
+        model.addColumn("ID Intent");
+        model.addColumn("ID Reviewer");
+        model.addColumn("Valoración");
+        model.addColumn("Comentario");
 
-    // Iterar sobre cada review y agregarlo al JTable
-    for (Review review : reviews) {
-        // Crear un arreglo de objetos para cada fila (review)
-        Object[] row = {
-            review.getId(), // ID Review
-            review.getIdIntent(), // ID Intent asociado
-            review.getIdReviewer(), // ID del revisor
-            review.getValoracion(), // Valoración
-            review.getComentario() // Comentario
-        };
-        model.addRow(row); // Agregar la fila al modelo de la tabla
-    }
+        // Iterar sobre cada review y agregarlo al JTable
+        for (Review review : reviews) {
+            // Crear un arreglo de objetos para cada fila (review)
+            Object[] row = {
+                review.getId(), // ID Review
+                review.getIdIntent(), // ID Intent asociado
+                review.getIdReviewer(), // ID del revisor
+                review.getValoracion(), // Valoración
+                review.getComentario() // Comentario
+            };
+            model.addRow(row); // Agregar la fila al modelo de la tabla
+        }
 
-    // Configurar el renderer personalizado para las filas
-    ReviewTableCellRenderer renderer = new ReviewTableCellRenderer();
-    for (int i = 0; i < jTable1.getColumnCount(); i++) {
-        jTable1.getColumnModel().getColumn(i).setCellRenderer(renderer);
-    }
+        // Configurar el renderer personalizado para las filas
+        ReviewTableCellRenderer renderer = new ReviewTableCellRenderer();
+        for (int i = 0; i < jTable1.getColumnCount(); i++) {
+            jTable1.getColumnModel().getColumn(i).setCellRenderer(renderer);
+        }
 
-    // Añadir ListSelectionListener para detectar la fila seleccionada
-    jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-        @Override
-        public void valueChanged(ListSelectionEvent event) {
-            if (!event.getValueIsAdjusting()) {
-                int selectedRow = jTable1.getSelectedRow();
-                if (selectedRow != -1) {
-                    // Obtener el ID del review seleccionado (columna 0)
-                    Object id = jTable1.getValueAt(selectedRow, 0);
-                    System.out.println("Id del review seleccionado: " + id);
+        // Añadir ListSelectionListener para detectar la fila seleccionada
+        jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent event) {
+                if (!event.getValueIsAdjusting()) {
+                    int selectedRow = jTable1.getSelectedRow();
+                    if (selectedRow != -1) {
+                        // Obtener el ID del review seleccionado (columna 0)
+                        Object id = jTable1.getValueAt(selectedRow, 0);
+                        System.out.println("Id del review seleccionado: " + id);
 
-                    // Mostrar el ID del review seleccionado en el JLabel o JTextField
-                    jLabel1.setText("Id del review seleccionado: " + id.toString());
+                        // Mostrar el ID del review seleccionado en el JLabel o JTextField
+                        jLabel1.setText("Id del review seleccionado: " + id.toString());
 
-                    // Puedes realizar otras acciones con el ID del review seleccionado si es necesario
+                        // Puedes realizar otras acciones con el ID del review seleccionado si es necesario
+                    }
                 }
             }
-        }
-    });
-}
-
+        });
+    }
 
     /**
      * @param args the command line arguments
@@ -268,9 +319,10 @@ public class ReviewsFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables

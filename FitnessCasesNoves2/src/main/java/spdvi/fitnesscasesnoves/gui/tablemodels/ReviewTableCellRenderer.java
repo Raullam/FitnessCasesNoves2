@@ -22,7 +22,7 @@ public class ReviewTableCellRenderer extends DefaultTableCellRenderer {
         int valoracion = (int) table.getValueAt(row, 3); // Suponiendo que la columna de valoración es la 3 (índice 3)
 
         // Definir colores basados en la valoración
-        if (valoracion >= 4) {
+        if (valoracion >= 3) {
             c.setBackground(Color.GREEN); // Valoración alta
         } else {
             c.setBackground(Color.RED); // Valoración baja

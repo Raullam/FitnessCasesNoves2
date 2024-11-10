@@ -30,6 +30,8 @@ public class LogicaExercicisFrame {
     ArrayList<Exercici> exercicis = da.getExercicis(); // Obtener la lista de ejercicios desde la base de datos
 
     DefaultTableModel model = configurarModeloTabla(jTable1); // Configura la tabla
+    // Hacer la tabla no editable
+    jTable1.setDefaultEditor(Object.class, null);
     agregarDatosATabla(model, exercicis); // Llena la tabla con datos
     agregarListenerSeleccion(jTable1); // Agrega el listener de selección
 }

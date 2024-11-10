@@ -16,59 +16,31 @@ import uk.co.caprica.vlcj.player.embedded.videosurface.VideoSurface;
  *
  * @author Rulox
  */
-public class ReviewVideoFrame extends javax.swing.JFrame {
+public class ReviewVideoFrame2 extends javax.swing.JFrame {
 
     private String idIntent;
-    private int id, idUsuari,Idintentt;
+    private int id, idUsuari, Idintentt;
     private String exercici;
     private String idExercici, timestampInici, timestampFi, videofile;
     private EmbeddedMediaPlayer mediaPlayer;
     private MediaPlayerFactory mediaPlayerFactory;
     private DataAccess dataAccess;
-    static File videoFile ;
+    static File videoFile;
 
     /**
      * Creates new form DetallIntent
      */
-    public ReviewVideoFrame() {
+    public ReviewVideoFrame2() {
         initComponents();
         this.setLocationRelativeTo(null); // Centro en la pantalla
         initializeVLCPlayer();
         loadVideoFromIntent();
         dataAccess = new DataAccess();
-        setTitle("Crea VALORACIÓ ");
+        setTitle("Observa o modifica VALORACIÓ ");
 
     }
 
-    public ReviewVideoFrame(String intent) {
-        this.idIntent = intent;
-        initComponents();
-        this.setLocationRelativeTo(null); // Centro en la pantalla
-        jLabel1.setText(idIntent);
-        initializeVLCPlayer();
-        loadVideoFromIntent();
-        dataAccess = new DataAccess();
-        ponerIdInstructorLabel();
-        setTitle("Crea VALORACIÓ ");
-
-    }
-
-    public ReviewVideoFrame(String intent, int id, String exercici) {
-        this.idIntent = intent;
-        this.id = id;
-        this.exercici = exercici;
-        initComponents();
-        this.setLocationRelativeTo(null); // esto es para que se centre en la pantalla
-        dataAccess = new DataAccess();
-
-        jLabel1.setText(idIntent);
-        initializeVLCPlayer();
-        loadVideoFromIntent();
-        ponerIdInstructorLabel();
-        setTitle("Crea VALORACIÓ ");
-
-    }
-     public ReviewVideoFrame(int Idintentt) {
+    public ReviewVideoFrame2(int Idintentt) {
         this.Idintentt = Idintentt;
         initComponents();
         this.setLocationRelativeTo(null); // esto es para que se centre en la pantalla
@@ -77,25 +49,14 @@ public class ReviewVideoFrame extends javax.swing.JFrame {
         initializeVLCPlayer();
         loadVideoFromIntent2();
         ponerIdInstructorLabel();
-        setTitle("Crea VALORACIÓ ");
+        jLabel6.setVisible(false);
+        setTitle("Observa o modifica VALORACIÓ ");
 
     }
 
-    ReviewVideoFrame(String idIntent, int idUsuari, String idExercici, String timestampInici, String timestampFi, String videofile) {
-        this.idIntent = idIntent;
-        this.idUsuari = idUsuari;
-        this.idExercici = idExercici;
-        this.timestampInici = timestampInici;
-        this.timestampFi = timestampFi;
-        this.videofile = videofile;
-        dataAccess = new DataAccess();
-        initializeVLCPlayer();
-        loadVideoFromIntent();
-        ponerIdInstructorLabel();
-        setTitle("Crea VALORACIÓ ");
-
+    public void setIdIntentLabel(int idIntentot) {
+        jLabel6.setText(String.valueOf(idIntentot));
     }
-    
 
     private void initializeVLCPlayer() {
         mediaPlayerFactory = new MediaPlayerFactory();
@@ -122,7 +83,7 @@ public class ReviewVideoFrame extends javax.swing.JFrame {
         String videoFilePath = dataAccess.getVideoFile(intentId);
 
         if (videoFilePath != null) {
-             videoFile = new File("videos/" + videoFilePath);
+            videoFile = new File("videos/" + videoFilePath);
             if (videoFile.exists()) {
                 mediaPlayer.media().startPaused(videoFile.getAbsolutePath());
             } else {
@@ -132,6 +93,7 @@ public class ReviewVideoFrame extends javax.swing.JFrame {
             System.out.println("No se encontró el video para el intento: " + intentId);
         }
     }
+
     private void loadVideoFromIntent2() {
         String labelText = jLabel1.getText();
         int intentId = Idintentt;
@@ -140,7 +102,7 @@ public class ReviewVideoFrame extends javax.swing.JFrame {
         String videoFilePath = dataAccess.getVideoFile(intentId);
 
         if (videoFilePath != null) {
-             videoFile = new File("videos/" + videoFilePath);
+            videoFile = new File("videos/" + videoFilePath);
             if (videoFile.exists()) {
                 mediaPlayer.media().startPaused(videoFile.getAbsolutePath());
             } else {
@@ -166,7 +128,7 @@ public class ReviewVideoFrame extends javax.swing.JFrame {
     private void stopVideo() {
         if (mediaPlayer != null) {
             mediaPlayer.controls().stop();
-                            mediaPlayer.media().startPaused(videoFile.getAbsolutePath());
+            mediaPlayer.media().startPaused(videoFile.getAbsolutePath());
 
         }
     }
@@ -198,11 +160,12 @@ public class ReviewVideoFrame extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        jButton1.setText("Crear Review");
+        jButton1.setText("Modificar Review");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -270,9 +233,9 @@ public class ReviewVideoFrame extends javax.swing.JFrame {
                             .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
                             .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(37, 37, 37)
+                                .addGap(43, 43, 43)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -285,11 +248,14 @@ public class ReviewVideoFrame extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(12, 12, 12)
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(12, 12, 12))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(34, 34, 34)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(22, 22, 22)))
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(17, 17, 17))
         );
@@ -299,7 +265,11 @@ public class ReviewVideoFrame extends javax.swing.JFrame {
                 .addGap(17, 17, 17)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addComponent(jButton3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
@@ -350,13 +320,13 @@ public class ReviewVideoFrame extends javax.swing.JFrame {
         // Obtener el comentario desde jTextArea1 (sin validación adicional)
         String comentari = jTextArea1.getText().trim();
 
-        // Extraer el Id del intento desde jLabel1
-        String labelText = jLabel1.getText();
-        String intentIdString = labelText.length() >= 8 ? labelText.substring(3, 8).trim() : "";
-        int idIntent;
+        // Extraer el Id de la review
+        String idRevieww = jLabel6.getText();
+
+        int idReview;
 
         try {
-            idIntent = Integer.parseInt(intentIdString);
+            idReview = Integer.parseInt(idRevieww);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "No se pudo obtener un ID válido para el intento.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -366,7 +336,7 @@ public class ReviewVideoFrame extends javax.swing.JFrame {
         int idReviewer = DataAccess.idInstructor; // Asumiendo que tienes un método para obtener el ID del revisor
 
         // Insertar la review en la base de datos
-        boolean reviewCreated = dataAccess.createReview(idIntent, idReviewer, valoracio, comentari);
+        boolean reviewCreated = dataAccess.updateReview(idReview, valoracio, comentari, idReviewer);
 
         if (reviewCreated) {
             JOptionPane.showMessageDialog(this, "Review creada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
@@ -429,30 +399,6 @@ public class ReviewVideoFrame extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -472,6 +418,7 @@ public class ReviewVideoFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;

@@ -6,7 +6,10 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -67,6 +70,11 @@ public class IntentsFrame extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jTable1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 jTable1PropertyChange(evt);
@@ -159,7 +167,7 @@ public class IntentsFrame extends javax.swing.JFrame {
             String intentId = jTable1.getValueAt(selectedRow, 0).toString(); // ID del intent
 
             // Crear el mensaje del modal
-            String mensaje = "¿Estás seguro de querer eliminar el intent con ID " + intentId + "?";
+            String mensaje = "¿Estas segur de voler esborrar l'intent amb ID " + intentId + "?";
 
             // Mostrar el modal de confirmación
             int respuesta = JOptionPane.showConfirmDialog(this, mensaje, "Confirmar eliminación", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -177,51 +185,131 @@ public class IntentsFrame extends javax.swing.JFrame {
 
                 // Actualizar la tabla después de eliminar
                 insertarIntentsAlJtext(); // Vuelve a cargar la tabla sin el intent eliminado
-                JOptionPane.showMessageDialog(this, "Intent eliminado con éxito."); // Mensaje de éxito
+                JOptionPane.showMessageDialog(this, "Intent eliminat amb exit."); // Mensaje de éxito
             }
             // Si el usuario selecciona NO, simplemente no hacemos nada
         } else {
-            JOptionPane.showMessageDialog(this, "Por favor, selecciona un intent para eliminar."); // Mensaje si no hay selección
+            JOptionPane.showMessageDialog(this, "Selecciona un intent para eliminar."); // Mensaje si no hay selección
     }    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        DataAccess da = new DataAccess();
+      DataAccess da = new DataAccess();
 
-        // Obtener la fila seleccionada
-        int selectedRow = jTable1.getSelectedRow();
+    // Obtener la fila seleccionada
+    int selectedRow = jTable1.getSelectedRow();
 
-        // Verifica si una fila está seleccionada
-        if (selectedRow != -1) {
-            // Crear un objeto Intents con los datos de la fila seleccionada
-            Intents intent = new Intents(
-                    Integer.parseInt(jTable1.getValueAt(selectedRow, 0).toString()), // id
-                    Integer.parseInt(jTable1.getValueAt(selectedRow, 1).toString()), // idUsuari
-                    Integer.parseInt(jTable1.getValueAt(selectedRow, 2).toString()), // idExercici
-                    (jTable1.getValueAt(selectedRow, 3) != "" ? jTable1.getValueAt(selectedRow, 3).toString() : null), // timestampInici
-                    (jTable1.getValueAt(selectedRow, 4) != "" ? jTable1.getValueAt(selectedRow, 4).toString() : null), // timestampFi
-                    (jTable1.getValueAt(selectedRow, 5) != "" ? jTable1.getValueAt(selectedRow, 5).toString() : null) // videoFile
-            );
+    // Verifica si una fila está seleccionada
+    if (selectedRow != -1) {
+        try {
+            // Obtener los valores actuales de la fila seleccionada
+            int id = Integer.parseInt(jTable1.getValueAt(selectedRow, 0).toString());
+            int idUsuari = Integer.parseInt(jTable1.getValueAt(selectedRow, 1).toString());
+            int idExercici = Integer.parseInt(jTable1.getValueAt(selectedRow, 2).toString());
+            String timestampInici = jTable1.getValueAt(selectedRow, 3).toString();
+            String timestampFi = jTable1.getValueAt(selectedRow, 4) != null ? jTable1.getValueAt(selectedRow, 4).toString() : "";
+            String videoFile = jTable1.getValueAt(selectedRow, 5) != null ? jTable1.getValueAt(selectedRow, 5).toString() : "";
 
-            // Mostrar modal de confirmación
-            int respuesta = JOptionPane.showConfirmDialog(this, "Estàs segur que vols modificar l'usuari amb id: " + intent.getId() + "?",
-                    "Confirmar modificació", JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE);
+            // Mostrar un JOptionPane para editar el Timestamp de Inici
+            String newTimestampInici = JOptionPane.showInputDialog(this, 
+                "Edita el Timestamp de Inici", timestampInici);
+            
+            // Si el usuario cancela o deja vacío, no continuar con los demás inputs
+            if (newTimestampInici == null) {
+                return; // Salimos de la función si se cancela el primer dialogo
+            }
+            if (!newTimestampInici.trim().isEmpty()) {
+                timestampInici = newTimestampInici;
+            }
+
+            // Mostrar un JOptionPane para editar el Timestamp de Fi
+            String newTimestampFi = JOptionPane.showInputDialog(this, 
+                "Edita el Timestamp de Fi ", timestampFi);
+            
+            // Si el usuario cancela o deja vacío, no continuar con el siguiente input
+            if (newTimestampFi == null) {
+                return; // Salimos de la función si se cancela el segundo dialogo
+            }
+            if (!newTimestampFi.trim().isEmpty()) {
+                timestampFi = newTimestampFi;
+            }
+
+            // Mostrar un JOptionPane para editar el VideoFile
+            String newVideoFile = JOptionPane.showInputDialog(this, 
+                "Edita el VideoFile ", videoFile);
+            
+            // Si el usuario cancela o deja vacío, no continuar con la actualización
+            if (newVideoFile == null) {
+                return; // Salimos de la función si se cancela el tercer dialogo
+            }
+            if (!newVideoFile.trim().isEmpty()) {
+                videoFile = newVideoFile;
+            }
+
+            // Confirmar los cambios antes de guardar
+            int respuesta = JOptionPane.showConfirmDialog(this, 
+                "Estàs segur que vols modificar l'intent amb id: " + id + "?",
+                "Confirmar modificació", JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
             if (respuesta == JOptionPane.YES_OPTION) {
+                // Crear el objeto Intents con los nuevos datos
+                Intents intent = new Intents(id, idUsuari, idExercici, timestampInici, timestampFi, videoFile);
+
                 // Guardar el objeto Intents en la base de datos
                 da.actualizarIntent(intent);
 
                 JOptionPane.showMessageDialog(this, "Canvis desats correctament a la base de dades.");
+                insertarIntentsAlJtext();
             }
-            // Si el usuario selecciona "NO", no se realiza ninguna acción
-        } else {
-            JOptionPane.showMessageDialog(this, "Si us plau, selecciona una fila per editar.");
+        } catch (NumberFormatException e) {
+            // Captura la excepción si alguno de los valores no es válido para convertir a entero
+            System.out.println("Error al parsear les dades a la taula");
+            e.printStackTrace();  // Esto imprimirá el stack trace del error completo
+            JOptionPane.showMessageDialog(this, "Error: Alguns dades no son valides. Per favor, revisi la taula.");
+        } catch (Exception e) {
+            System.out.println("Error general al intentar editar el intent.");
+            e.printStackTrace();  // Esto imprimirá el stack trace del error completo
         }
-
+    } else {
+        JOptionPane.showMessageDialog(this, "Selecciona una fila per editar.");
+    }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTable1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTable1PropertyChange
         // TODO add your handling code here:
     }//GEN-LAST:event_jTable1PropertyChange
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+      // Obtenim el text complet de jLabel3IdUsuariSelecionat
+
+        int selectedRow = jTable1.getSelectedRow(); // Obtenir la fila seleccionada de jTable1
+
+        if (selectedRow != -1) { // Comprova que hi hagi files seleccionades a ambdues taules
+            // Obtenir els valors de la fila seleccionada de jTable2
+            int idIntent = Integer.parseInt(jTable1.getValueAt(selectedRow, 0).toString()); // ID del intent
+
+            // Crear i inicialitzar el frame ReviewVideoFrame amb les dades de l'intent
+            ReviewVideoFrame2 reviewFrame = new ReviewVideoFrame2(idIntent);
+            reviewFrame.setIdIntentLabel(idIntent);
+            reviewFrame.setVisible(true); // Mostrar el frame
+            reviewFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            // Obtener la ventana principal y deshabilitarla
+            JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(jTable1);
+            mainFrame.setEnabled(false);
+
+            // Agregar un WindowListener para reactivar la ventana principal cuando se cierre el frame secundario
+            reviewFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent e) {
+                    mainFrame.setEnabled(true);
+                    mainFrame.toFront(); // Llevar la ventana principal al frente
+                }
+            });
+
+        } else {
+            System.out.println("Selecciona una fila a ambdues taules abans de continuar.");
+        }  
+    }//GEN-LAST:event_jTable1MouseClicked
 
   public final void insertarIntentsAlJtext() {
     DataAccess da = new DataAccess();

@@ -4,6 +4,10 @@
  */
 package spdvi.fitnesscasesnoves.gui;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import spdvi.fitnesscasesnoves.dataAcces.DataAccess;
+import spdvi.fitnesscasesnoves.dto.Exercici;
 import spdvi.fitnesscasesnoves.logica.LogicaExercicisFrame;
 
 /**
@@ -11,6 +15,8 @@ import spdvi.fitnesscasesnoves.logica.LogicaExercicisFrame;
  * @author Rulox
  */
 public class ExercicisFrame extends javax.swing.JFrame {
+
+    private static JFrame parentFrame;
 
     /**
      * Creates new form ExercicisFrame
@@ -23,6 +29,8 @@ public class ExercicisFrame extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         insertarExercicisAlJTable();
         setTitle("Exercicis");
+
+        this.parentFrame = this;
 
     }
 
@@ -76,8 +84,18 @@ public class ExercicisFrame extends javax.swing.JFrame {
         });
 
         jButton3.setText("Borrar");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Editar");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -131,8 +149,108 @@ public class ExercicisFrame extends javax.swing.JFrame {
         this.setVisible(false);    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        // Abrir el JFrame "CrearExercici"
+        CrearExercici2 crearExerciciFrame = new CrearExercici2(this); // Asume que CrearExercici es el nombre de tu JFrame
+        crearExerciciFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Para cerrar solo esta ventana
+        crearExerciciFrame.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // Verificar si se ha seleccionado una fila en jTable1
+        int selectedRow = jTable1.getSelectedRow();
+
+        if (selectedRow != -1) { // Si una fila está seleccionada
+            // Obtener el ID y el nombre del usuario seleccionado
+            String exerciciId = jTable1.getValueAt(selectedRow, 0).toString();
+
+            // Crear el mensaje del modal
+            String mensaje = "¿Estas segur de voler eliminar l'exercici amb ID " + exerciciId + " i els seus intents i review relacionats a ell?";
+
+            // Mostrar el modal de confirmación
+            int respuesta = JOptionPane.showConfirmDialog(parentFrame, mensaje, "Confirmar eliminación", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+            // Verificar la respuesta del usuario
+            if (respuesta == JOptionPane.YES_OPTION) {
+                // Lógica para eliminar el usuario de la base de datos
+                DataAccess da = new DataAccess();
+                da.eliminarExercici(Integer.parseInt(exerciciId)); // Método que elimina el usuario
+
+                // Actualizar la tabla después de eliminar
+                //insertarExercicisAlJTable(); // Método para volver a cargar la tabla
+                JOptionPane.showMessageDialog(parentFrame, "Exercici eliminat amb exit."); // Mensaje de éxito
+                insertarExercicisAlJTable();
+            }
+        } else {
+            JOptionPane.showMessageDialog(parentFrame, "Selecciona un exercici per eliminar."); // Mensaje si no hay selección
+        }
+
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        DataAccess da = new DataAccess();
+
+// Obtener la fila seleccionada
+        int selectedRow = jTable1.getSelectedRow();
+
+// Verificar si una fila está seleccionada
+        if (selectedRow != -1) {
+            try {
+                // Obtener los valores actuales de la fila seleccionada
+                int id = Integer.parseInt(jTable1.getValueAt(selectedRow, 0).toString());
+                String nomExercici = jTable1.getValueAt(selectedRow, 1).toString();
+                String descripcio = jTable1.getValueAt(selectedRow, 2).toString();
+
+                // Mostrar un JOptionPane para editar el NomExercici
+                String newNomExercici = JOptionPane.showInputDialog(this,
+                        "Edita el Nom del Exercici", nomExercici);
+
+                if (newNomExercici == null) {
+                    return; // Salimos de la función si se cancela el primer diálogo
+                }
+                if (!newNomExercici.trim().isEmpty()) {
+                    nomExercici = newNomExercici;
+                }
+
+                // Mostrar un JOptionPane para editar la Descripcio
+                String newDescripcio = JOptionPane.showInputDialog(this,
+                        "Edita la Descripció", descripcio);
+
+                if (newDescripcio == null) {
+                    return; // Salimos de la función si se cancela el segundo diálogo
+                }
+                if (!newDescripcio.trim().isEmpty()) {
+                    descripcio = newDescripcio;
+                }
+
+                // Confirmar los cambios antes de guardar
+                int respuesta = JOptionPane.showConfirmDialog(this,
+                        "Estàs segur que vols modificar l'exercici amb id: " + id + "?",
+                        "Confirmar modificació", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+
+                if (respuesta == JOptionPane.YES_OPTION) {
+                    // Crear el objeto Exercici con los nuevos datos
+                    Exercici exercici = new Exercici(id, nomExercici, descripcio);
+
+                    // Guardar el objeto Exercici en la base de datos
+                    da.actualizarExercici(exercici);
+
+                    JOptionPane.showMessageDialog(this, "Canvis desats correctament a la base de dades.");
+                    insertarExercicisAlJTable();
+
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error al parsear les dades a la taula.");
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error: Alguns dades no son valides. Per favor, revisi la taula.");
+            } catch (Exception e) {
+                System.out.println("Error general al intentar editar el exercici.");
+                e.printStackTrace();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecciona una fila per editar.");
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
     public final void insertarExercicisAlJTable() {
         LogicaExercicisFrame lef = new LogicaExercicisFrame(jLabel1, jTable1);
         lef.insertarExercicisAlJtext();

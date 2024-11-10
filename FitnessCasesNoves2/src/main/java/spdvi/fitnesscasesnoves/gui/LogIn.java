@@ -18,7 +18,7 @@ public class LogIn extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         focusListenerr();
-        setTitle("eRgistre");
+        setTitle("Inici de sessió");
 
 
     }
