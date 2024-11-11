@@ -230,16 +230,16 @@ public class DataAccess {
                 if (idIntent <= 9) {
                     intentosSinReview.add("ID: " + idIntent + "         " + nomExercici);
                 }
-                if (idIntent > 9) {
+                if (idIntent > 9 && idIntent <=99) {
                     intentosSinReview.add("ID: " + idIntent + "       " + nomExercici);
                 }
-                if (idIntent > 99) {
+                if (idIntent > 99&& idIntent <=999) {
                     intentosSinReview.add("ID: " + idIntent + "      " + nomExercici);
                 }
-                if (idIntent > 999) {
+                if (idIntent > 999&& idIntent <=9999) {
                     intentosSinReview.add("ID: " + idIntent + "      " + nomExercici);
                 }
-                if (idIntent > 9999) {
+                if (idIntent > 9999&& idIntent <=99999) {
                     intentosSinReview.add("ID: " + idIntent + "     " + nomExercici);
                 }
             }
